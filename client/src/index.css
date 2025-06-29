@@ -1,0 +1,17 @@
+@import "tailwindcss";
+
+
+@layer components{
+    .gra-bg-r{
+        @apply bg-gradient-to-r from-purple-300  to-blue-300
+    }
+    .gra-bg-l{
+        @apply bg-gradient-to-l from-purple-400  to-pink-300
+    }
+    .cusbgL{
+        @apply bg-[#72a9dc]
+    }
+    .cusbgD{
+        @apply bg-[#8ec1db]
+    }
+}
