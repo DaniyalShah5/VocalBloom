@@ -6,6 +6,7 @@ import './index.css';
 import { AuthProvider } from '../src/context/AuthContext';
 import { SocketProvider } from '../src/context/SocketContext';
 import axios from 'axios';
+import { SessionProvider } from './context/SessionContext';
 
 
 axios.defaults.baseURL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
@@ -27,7 +28,9 @@ ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <AuthProvider>
       <SocketProvider>
+        <SessionProvider>
       <App />
+      </SessionProvider>
       </SocketProvider>
     </AuthProvider>
   </React.StrictMode>

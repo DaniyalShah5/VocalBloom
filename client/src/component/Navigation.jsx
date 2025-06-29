@@ -1,10 +1,13 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { useSession } from "../context/SessionContext";
 import ProfileMenu from "../component/ProfileMenu";
-import { Menu, X } from "lucide-react"; 
+import { Menu, X } from "lucide-react";
+
 function Navigation() {
   const { user } = useAuth();
+  const { pendingRequestsCount } = useSession(); // Get count from session context
   const [menuOpen, setMenuOpen] = useState(false);
 
   const navItems = [
@@ -25,6 +28,7 @@ function Navigation() {
       roles: ["child", "therapist"],
       public: true,
       excludeRoles: ["admin", "parent"],
+      showBadge: true, // Special flag for this item
     },
     {
       to: "/create-therapy",
@@ -60,6 +64,32 @@ function Navigation() {
     return item.roles.includes(user.role);
   };
 
+  const renderNavItemWithBadge = (item, isMobile = false) => {
+    const isInteractiveSession = item.to === "/interactive-session";
+    const shouldShowBadge = isInteractiveSession && 
+                           user?.role === "therapist" && 
+                           pendingRequestsCount > 0;
+
+    const baseClasses = isMobile 
+      ? "block text-gray-700 hover:bg-[#8ec1db] hover:text-white p-2 rounded-md"
+      : "text-md text-gray-700 hover:scale-105 duration-300 hover:bg-[#8ec1db] hover:text-white p-2 rounded-lg";
+
+    return (
+      <Link
+        to={item.to}
+        className={`${baseClasses} ${shouldShowBadge ? 'relative' : ''}`}
+        onClick={isMobile ? () => setMenuOpen(false) : undefined}
+      >
+        {item.text}
+        {shouldShowBadge && (
+          <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center animate-pulse">
+            {pendingRequestsCount}
+          </span>
+        )}
+      </Link>
+    );
+  };
+
   return (
     <nav className="bg-white shadow-lg mb-2">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -75,17 +105,12 @@ function Navigation() {
 
           {/* Desktop Nav */}
           <div className="hidden md:flex space-x-5">
-            {navItems.map(
-              (item, index) =>
-                shouldShowNavItem(item) && (
-                  <Link
-                    key={index}
-                    to={item.to}
-                    className="text-md text-gray-700 hover:scale-105 duration-300 hover:bg-[#8ec1db] hover:text-white p-2 rounded-lg"
-                  >
-                    {item.text}
-                  </Link>
-                )
+            {navItems.map((item, index) =>
+              shouldShowNavItem(item) && (
+                <div key={index}>
+                  {renderNavItemWithBadge(item)}
+                </div>
+              )
             )}
           </div>
 
@@ -145,18 +170,12 @@ function Navigation() {
       {/* Mobile Dropdown Menu */}
       {menuOpen && (
         <div className="md:hidden px-4 pb-4 space-y-2">
-          {navItems.map(
-            (item, index) =>
-              shouldShowNavItem(item) && (
-                <Link
-                  key={index}
-                  to={item.to}
-                  onClick={() => setMenuOpen(false)} // Close menu on click
-                  className="block text-gray-700 hover:bg-[#8ec1db] hover:text-white p-2 rounded-md"
-                >
-                  {item.text}
-                </Link>
-              )
+          {navItems.map((item, index) =>
+            shouldShowNavItem(item) && (
+              <div key={index}>
+                {renderNavItemWithBadge(item, true)}
+              </div>
+            )
           )}
         </div>
       )}
