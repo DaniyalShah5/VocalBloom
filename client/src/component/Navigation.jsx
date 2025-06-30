@@ -7,7 +7,7 @@ import { Menu, X } from "lucide-react";
 
 function Navigation() {
   const { user } = useAuth();
-  const { pendingRequestsCount } = useSession(); // Get count from session context
+  const { pendingRequestsCount } = useSession(); 
   const [menuOpen, setMenuOpen] = useState(false);
 
   const navItems = [
@@ -28,11 +28,16 @@ function Navigation() {
       roles: ["child", "therapist"],
       public: true,
       excludeRoles: ["admin", "parent"],
-      showBadge: true, // Special flag for this item
+      showBadge: true, 
     },
     {
       to: "/create-therapy",
       text: "Create Modules",
+      roles: ["therapist"],
+    },
+    {
+      to: "/patientDashboard",
+      text: "Patient Dashboard",
       roles: ["therapist"],
     },
     {

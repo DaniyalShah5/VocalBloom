@@ -50,7 +50,6 @@ app.use('/api/schedule', scheduleRouter);
 app.use('/api/support', supportRouter);
 app.use('/api/admin', adminRouter);
 app.use('/api/register-parent', registerParentRouter);
-
 app.use('/api/session-requests', sessionRequestsRouter);
 app.use('/api/therapists', therapistsRouter);
 app.use('/api/users', usersRouter);

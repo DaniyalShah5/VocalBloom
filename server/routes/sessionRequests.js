@@ -42,7 +42,7 @@ router.post("/", verifyToken, async (req, res) => {
       : reqObj.child;
     
 
-    // ── EMIT to all therapists in "therapist" room ──
+    // EMIT to all therapists in "therapist" room 
     const io = getIo();
     const therapists = getOnlineUsers().filter(user => user.role === 'therapist');
     therapists.forEach(therapist => {
@@ -97,7 +97,7 @@ router.put("/:id/accept", verifyToken, async (req, res) => {
 
     if (!session) return res.status(400).json({ error: "Invalid request." });
 
-    // ── EMIT to the specific child’s userId room ──
+    // EMIT to the specific child’s userId room
     const io = getIo();
     const payload = {
       requestId: session._id,
@@ -130,7 +130,7 @@ router.put("/:id/decline", verifyToken, async (req, res) => {
     );
     if (!session) return res.status(400).json({ error: "Invalid request." });
 
-    // ── EMIT to the child’s room that it was declined ──
+    // EMIT to the child’s room that it was declined 
     const io = getIo();
     io.to(session.child.toString()).emit("session_request_updated", {
       requestId: session._id,
@@ -162,7 +162,7 @@ router.put("/:id/end", verifyToken, async (req, res) => {
 
     if (!session) return res.status(400).json({ error: "Invalid request." });
 
-    // ── EMIT to both patient and therapist if needed ──
+    // EMIT to both patient and therapist if needed 
     const io = getIo();
     const payload = {
       requestId: session._id,

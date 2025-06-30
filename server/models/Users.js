@@ -63,7 +63,7 @@ const userSchema = new mongoose.Schema({
     ],
     default: []
   },
-  // Therapist qualifications
+  
   qualifications: {
     degree: { type: String },
     certifications: [{type: String}],
