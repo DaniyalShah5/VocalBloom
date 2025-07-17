@@ -99,7 +99,7 @@ const RegisterTherapist = () => {
       });
 
       await axios.post(
-        "http://localhost:5000/api/register-therapist",
+        `${import.meta.env.VITE_API_BASE_URL}/api/register-therapist`,
         formDataToSend,
         {
           headers: {

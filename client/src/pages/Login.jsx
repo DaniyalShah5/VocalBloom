@@ -36,7 +36,7 @@ const Login = () => {
     }
     
     try {
-      const response = await fetch(`http://localhost:5000/api/auth/parent/${email}/children`);
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/auth/parent/${email}/children`);
       if (response.ok) {
         const children = await response.json();
         setChildOptions(children);

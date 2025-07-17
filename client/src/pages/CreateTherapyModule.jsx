@@ -101,7 +101,7 @@ const CreateTherapyModule = () => {
       };
 
       const token = localStorage.getItem('token');
-      await axios.post('http://localhost:5000/api/therapy', dataToSend, {
+      await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/therapy`, dataToSend, {
         headers: { Authorization: `Bearer ${token}` }
       });
 

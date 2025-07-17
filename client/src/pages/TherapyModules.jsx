@@ -33,7 +33,7 @@ const TherapyModules = () => {
 
        
         const modulesRes = await axios.get(
-          `http://localhost:5000/api/therapy/category/${selectedCategory}`,
+          `${import.meta.env.VITE_API_BASE_URL}/api/therapy/category/${selectedCategory}`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }
@@ -41,7 +41,7 @@ const TherapyModules = () => {
 
        
         const therapistsRes = await axios.get(
-          `http://localhost:5000/api/therapists/specialty/${selectedCategory}`,
+          `${import.meta.env.VITE_API_BASE_URL}/api/therapists/specialty/${selectedCategory}`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }

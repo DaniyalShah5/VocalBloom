@@ -9,7 +9,7 @@ export default function FeedbackList({ childId }) {
     const fetchFeedbacks = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:5000/api/feedback/child/${childId}`,
+          `${import.meta.env.VITE_API_BASE_URL}/api/feedback/child/${childId}`,
           { headers: { Authorization: `Bearer ${token}` } }
         );
         setFeedbacks(response.data);

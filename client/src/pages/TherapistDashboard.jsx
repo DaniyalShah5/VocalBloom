@@ -26,7 +26,7 @@ const TherapistDashboard = () => {
         }
 
         const response = await axios.get(
-          "http://localhost:5000/api/users/therapist/patients",
+          `${import.meta.env.VITE_API_BASE_URL}/api/users/therapist/patients`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }
@@ -83,7 +83,7 @@ const TherapistDashboard = () => {
       try {
         const token = localStorage.getItem("token");
         const progressRes = await axios.get(
-          `http://localhost:5000/api/progress/${childId}`,
+          `${import.meta.env.VITE_API_BASE_URL}/api/progress/${childId}`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }

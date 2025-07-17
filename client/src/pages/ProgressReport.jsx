@@ -22,7 +22,7 @@ const ProgressReport = () => {
         }
 
         
-        const userRes = await axios.get('http://localhost:5000/api/auth/me', {
+        const userRes = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/auth/me`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         const user = userRes.data;
@@ -40,13 +40,13 @@ const ProgressReport = () => {
         }
 
        
-        const childRes = await axios.get(`http://localhost:5000/api/users/child/${childId}`, {
+        const childRes = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/users/child/${childId}`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         setChildInfo(childRes.data);
 
         
-        const progressRes = await axios.get(`http://localhost:5000/api/progress/${childId}`, {
+        const progressRes = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/progress/${childId}`, {
           headers: { Authorization: `Bearer ${token}` }
         });
 

@@ -111,7 +111,7 @@ const RegisterParent = () => {
       };
 
      
-      const res = await axios.post('http://localhost:5000/api/register-parent', registrationData);
+      const res = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/register-parent`, registrationData);
 
       await login({ email: parentData.email, password: parentData.password });
 

@@ -20,13 +20,13 @@ const AdminPanel = () => {
 
   const token = localStorage.getItem("token");
 
-  const BACKEND_BASE_URL = "http://localhost:5000";
+  const BACKEND_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
   
   const fetchPendingModules = async () => {
     try {
       const res = await axios.get(
-        "http://localhost:5000/api/admin/pending-modules",
+        `${import.meta.env.VITE_API_BASE_URL}/api/admin/pending-modules`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -40,7 +40,7 @@ const AdminPanel = () => {
 
   const fetchUsers = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/admin/users", {
+      const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/admin/users`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setUsers(res.data);
@@ -53,7 +53,7 @@ const AdminPanel = () => {
   const fetchPendingTherapists = async () => {
     try {
       const res = await axios.get(
-        "http://localhost:5000/api/admin/pending-therapists",
+        `${import.meta.env.VITE_API_BASE_URL}/api/admin/pending-therapists`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -70,7 +70,7 @@ const AdminPanel = () => {
   const approveModule = async (moduleId) => {
     try {
       const res = await axios.put(
-        `http://localhost:5000/api/admin/approve/${moduleId}`,
+        `${import.meta.env.VITE_API_BASE_URL}/api/admin/approve/${moduleId}`,
         {},
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -86,7 +86,7 @@ const AdminPanel = () => {
   const disapproveModule = async (moduleId) => {
     try {
       await axios.put(
-        `http://localhost:5000/api/admin/reject-module/${moduleId}`,
+        `${import.meta.env.VITE_API_BASE_URL}/api/admin/reject-module/${moduleId}`,
         {},
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -103,7 +103,7 @@ const AdminPanel = () => {
   const approveTherapist = async (therapistId) => {
     try {
       await axios.put(
-        `http://localhost:5000/api/admin/approve-therapist/${therapistId}`,
+        `${import.meta.env.VITE_API_BASE_URL}/api/admin/approve-therapist/${therapistId}`,
         {},
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -120,7 +120,7 @@ const AdminPanel = () => {
   const rejectTherapist = async (therapistId) => {
     try {
       await axios.put(
-        `http://localhost:5000/api/admin/reject-therapist/${therapistId}`,
+        `${import.meta.env.VITE_API_BASE_URL}/api/admin/reject-therapist/${therapistId}`,
         {},
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -136,7 +136,7 @@ const AdminPanel = () => {
   
   const deleteUser = async (userId) => {
     try {
-      await axios.delete(`http://localhost:5000/api/admin/users/${userId}`, {
+      await axios.delete(`${import.meta.env.VITE_API_BASE_URL}/api/admin/users/${userId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setMessage("User deleted successfully.");

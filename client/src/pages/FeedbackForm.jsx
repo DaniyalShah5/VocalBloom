@@ -18,7 +18,7 @@ const FeedbackForm = ({ therapyModule, onFeedbackSubmitted }) => {
     try {
       const token = localStorage.getItem('token');
       const response = await axios.post(
-        'http://localhost:5000/api/feedback',
+        `${import.meta.env.VITE_API_BASE_URL}/api/feedback`,
         { therapyModule, feedbackText },
         { headers: { Authorization: `Bearer ${token}` } }
       );

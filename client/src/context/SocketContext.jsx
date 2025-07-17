@@ -18,7 +18,7 @@ export function SocketProvider({ children }) {
     
     if (authLoading) return;
     if (!user) return; 
-    const newSocket = io('http://localhost:5000', {
+    const newSocket = io(import.meta.env.VITE_API_BASE_URL, {
       auth: { token: localStorage.getItem('token') },
     });
 

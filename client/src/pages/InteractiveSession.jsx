@@ -50,8 +50,8 @@ useEffect(() => {
 
     const apiEndpoint =
         user.role === "therapist"
-            ? "http://localhost:5000/api/session-requests"
-            : "http://localhost:5000/api/session-requests/my";
+            ? `${import.meta.env.VITE_API_BASE_URL}/api/session-requests`
+            : `${import.meta.env.VITE_API_BASE_URL}/api/session-requests/my`;
 
     axios
         .get(apiEndpoint, {
@@ -194,7 +194,7 @@ useEffect(() => {
     setLoading(true);
     axios
       .post(
-        "http://localhost:5000/api/session-requests",
+        `${import.meta.env.VITE_API_BASE_URL}/api/session-requests`,
         {}, 
         { headers: { Authorization: `Bearer ${token}` } }
       )
@@ -215,7 +215,7 @@ useEffect(() => {
     setLoading(true);
     axios
         .put(
-            `http://localhost:5000/api/session-requests/${id}/accept`,
+            `${import.meta.env.VITE_API_BASE_URL}/api/session-requests/${id}/accept`,
             {},
             { headers: { Authorization: `Bearer ${token}` } }
         )
@@ -236,7 +236,7 @@ useEffect(() => {
     setLoading(true);
     axios
         .put(
-            `http://localhost:5000/api/session-requests/${id}/decline`,
+            `${import.meta.env.VITE_API_BASE_URL}/api/session-requests/${id}/decline`,
             {},
             { headers: { Authorization: `Bearer ${token}` } }
         )
@@ -258,7 +258,7 @@ useEffect(() => {
     setLoading(true);
     axios
         .put(
-            `http://localhost:5000/api/session-requests/${id}/end`,
+            `${import.meta.env.VITE_API_BASE_URL}/api/session-requests/${id}/end`,
             {},
             { headers: { Authorization: `Bearer ${token}` } }
         )
@@ -278,7 +278,7 @@ const cancelCurrentRequest = () => {
   
   setLoading(true);
   axios
-    .delete(`http://localhost:5000/api/session-requests/${request._id}`, {
+    .delete(`${import.meta.env.VITE_API_BASE_URL}/api/session-requests/${request._id}`, {
       headers: { Authorization: `Bearer ${token}` }
     })
     .then(() => {

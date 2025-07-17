@@ -27,7 +27,7 @@ const ScheduleSession = () => {
   useEffect(() => {
     const fetchTherapists = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/api/therapists");
+        const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/therapists`);
         setTherapists(res.data);
       } catch (err) {
         console.error("Failed to load therapists:", err);

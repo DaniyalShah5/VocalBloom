@@ -76,7 +76,7 @@ const ProfileMenu = () => {
         }
 
         
-        const currentUserRes = await axios.get('http://localhost:5000/api/auth/me', {
+        const currentUserRes = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/auth/me`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         const currentUserData = currentUserRes.data;
@@ -92,21 +92,21 @@ const ProfileMenu = () => {
 
         if (targetChildId) {
           
-          const childRes = await axios.get(`http://localhost:5000/api/users/child/${targetChildId}`, {
+          const childRes = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/users/child/${targetChildId}`, {
             headers: { Authorization: `Bearer ${token}` }
           });
           setChildInfo(childRes.data);
 
           
           if (currentUserData.role === 'child') {
-            const parentRes = await axios.get(`http://localhost:5000/api/users/parent-of-child/${currentUserData._id}`, {
+            const parentRes = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/users/parent-of-child/${currentUserData._id}`, {
               headers: { Authorization: `Bearer ${token}` }
             });
             setParentOfChildInfo(parentRes.data);
           }
 
           
-          const progressRes = await axios.get(`http://localhost:5000/api/progress/${targetChildId}`, {
+          const progressRes = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/progress/${targetChildId}`, {
             headers: { Authorization: `Bearer ${token}` }
           });
           setProgress(progressRes.data);

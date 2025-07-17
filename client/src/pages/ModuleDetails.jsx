@@ -32,13 +32,13 @@ const ModuleDetail = () => {
 
       
         const moduleRes = await axios.get(
-          `http://localhost:5000/api/therapy/${moduleId}`,
+          `${import.meta.env.VITE_API_BASE_URL}/api/therapy/${moduleId}`,
           { headers: { Authorization: `Bearer ${token}` } }
         );
         setModule(moduleRes.data);
 
        
-        const userRes = await axios.get('http://localhost:5000/api/auth/me', {
+        const userRes = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/auth/me`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         const currentUser = userRes.data;
@@ -77,7 +77,7 @@ const ModuleDetail = () => {
           setSelectedChild(firstChildId);
 
           const progressRes = await axios.get(
-            `http://localhost:5000/api/progress/${firstChildId}`,
+            `${import.meta.env.VITE_API_BASE_URL}/api/progress/${firstChildId}`,
             { headers: { Authorization: `Bearer ${token}` } }
           );
           const moduleProgress = progressRes.data.find(
@@ -93,7 +93,7 @@ const ModuleDetail = () => {
           setSelectedChild(ownChildId);
 
           const progressRes = await axios.get(
-            `http://localhost:5000/api/progress/${ownChildId}`,
+            `${import.meta.env.VITE_API_BASE_URL}/api/progress/${ownChildId}`,
             { headers: { Authorization: `Bearer ${token}` } }
           );
           const moduleProgress = progressRes.data.find(
@@ -142,7 +142,7 @@ const ModuleDetail = () => {
       }
 
       const response = await axios.post(
-        'http://localhost:5000/api/progress',
+        `${import.meta.env.VITE_API_BASE_URL}/api/progress`,
         progressData,
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -187,7 +187,7 @@ const ModuleDetail = () => {
       };
 
       const response = await axios.post(
-        'http://localhost:5000/api/progress',
+        `${import.meta.env.VITE_API_BASE_URL}/api/progress`,
         progressData,
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -253,7 +253,7 @@ const ModuleDetail = () => {
       };
 
       const response = await axios.post(
-        'http://localhost:5000/api/progress',
+        `${import.meta.env.VITE_API_BASE_URL}/api/progress`,
         progressData,
         { headers: { Authorization: `Bearer ${token}` } }
       );
