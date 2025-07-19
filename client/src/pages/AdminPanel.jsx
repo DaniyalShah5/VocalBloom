@@ -564,13 +564,13 @@ const handleCancelDelete = () => {
                                   (certUrl, idx) => (
                                     <a
                                       key={idx}
-                                      href={`${BACKEND_BASE_URL}${certUrl}`}
+                                      href={certUrl}
                                       target="_blank"
                                       rel="noopener noreferrer" 
                                       className="relative group overflow-hidden rounded-md shadow-sm block" 
                                     >
                                       <img
-                                        src={`${BACKEND_BASE_URL}${certUrl}`} 
+                                        src={certUrl} 
                                         alt={`Certification ${idx + 1}`}
                                         className="w-full h-42 object-cover transition-transform duration-300 group-hover:scale-105"
                                         onError={(e) => {
@@ -983,17 +983,17 @@ const handleCancelDelete = () => {
                             user.qualifications.certifications.length > 0 ? (
                               <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 bg-gray-50 p-3 rounded-lg">
                                 {user.qualifications.certifications.map(
-                                  (cert, idx) => (
+                                  (certUrl, idx) => (
                                     <div
                                       key={idx}
                                       className="relative group overflow-hidden rounded-md shadow-sm cursor-pointer"
                                       onClick={() => {
-                                        const imageUrl = `${BACKEND_BASE_URL}${cert}`;
-                                        setViewingImage(imageUrl);
+                                        
+                                        setViewingImage(certUrl);
                                       }}
                                     >
                                       <img
-                                        src={`${BACKEND_BASE_URL}${cert}`}
+                                        src={certUrl}
                                         alt={`Certification ${idx + 1}`}
                                         className="w-full h-42 object-cover transition-transform duration-300 group-hover:scale-105"
                                         onError={(e) => {

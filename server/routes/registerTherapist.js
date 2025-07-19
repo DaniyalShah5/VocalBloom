@@ -3,43 +3,19 @@ import express from 'express';
 import User from '../models/Users.js';
 import jwt from 'jsonwebtoken';
 import multer from 'multer';
-import fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
 import { generateVerificationToken, sendVerificationEmail } from '../services/emailService.js';
+import { CloudinaryStorage } from 'multer-storage-cloudinary';
+import cloudinary from '../config/cloudinary.js';
 
 const router = express.Router();
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-const uploadDir = 'uploads/certifications';
-
-
-const fullUploadDir = path.join(__dirname, '..' , uploadDir);
-console.log(`[Multer Config] Full upload directory path: ${fullUploadDir}`);
-if (!fs.existsSync(fullUploadDir)) {
-     try {
-        fs.mkdirSync(fullUploadDir, { recursive: true });
-        console.log(`[Multer Config] Upload directory created: ${fullUploadDir}`);
-    } catch (mkdirError) {
-        console.error(`[Multer Config Error] Failed to create upload directory ${fullUploadDir}:`, mkdirError);
-    }
-}
-
-
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    console.log(`[Multer Destination] Saving file: ${file.originalname} to ${fullUploadDir}`);
-    cb(null, fullUploadDir); 
+const storage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: {
+    folder: 'vocalbloom_certifications', 
+    format: async (req, file) => 'png', 
+    public_id: (req, file) => `cert_${Date.now()}_${file.originalname.split('.')[0]}`, 
   },
-  filename: function (req, file, cb) {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-    const fileExtension = path.extname(file.originalname);
-    const fileName = file.fieldname + '-' + uniqueSuffix + fileExtension;
-    console.log(`[Multer Filename] Generated filename: ${fileName}`);
-    cb(null, fileName);
-  }
 });
 
 const upload = multer({ storage: storage });
@@ -64,24 +40,16 @@ router.post('/', upload.array('certifications', 5), async (req, res) => {
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       console.log(`[Registration Error] Email already registered: ${email}`);
-      
-      if (req.files && req.files.length > 0) {
-        req.files.forEach(file => {
-          fs.unlink(file.path, (err) => { 
-            if (err) console.error(`[Cleanup Error] Error deleting file ${file.path}:`, err);
-            else console.log(`[Cleanup Success] Deleted file: ${file.path}`);
-          });
-        });
-      }
+
       return res.status(400).json({ error: 'Email is already registered' });
     }
 
-    const certificationPaths = [];
+    const certificationUrls = [];
     if (req.files && req.files.length > 0) {
       req.files.forEach(file => {
-        const filePath = `/${uploadDir}/${path.basename(file.path)}`; 
-        certificationPaths.push(filePath); 
-        console.log(`[File Path] Storing certification path: ${filePath}`);
+        
+        certificationUrls.push(file.path); 
+        console.log(`[File URL] Storing certification URL: ${file.path}`);
       });
     }
 
@@ -98,7 +66,7 @@ router.post('/', upload.array('certifications', 5), async (req, res) => {
       qualifications: {
         degree: authDegree,
         yearsOfExperience: parseInt(yearsOfExperience) || 0,
-        certifications: certificationPaths
+        certifications: certificationUrls
       },
       specialties: specialties || [],
       therapistApplicationStatus: 'pending',
@@ -137,13 +105,6 @@ router.post('/', upload.array('certifications', 5), async (req, res) => {
   } catch (error) {
     console.error("Therapist registration error:", error);
     
-    if (req.files && req.files.length > 0) {
-      req.files.forEach(file => {
-        fs.unlink(file.path, (err) => {
-          if (err) console.error("Error deleting temp file on registration failure:", err);
-        });
-      });
-    }
     res.status(500).json({ error: error.message });
   }
 });

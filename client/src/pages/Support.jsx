@@ -13,9 +13,9 @@ const Support = () => {
   const handleContactSubmit = (e) => {
     e.preventDefault();
 
-    const serviceId = 'YOUR_SERVICE_ID';
-    const templateId = 'YOUR_TEMPLATE_ID';
-    const publicKey = 'YOUR_PUBLIC_KEY';
+    const serviceId = import.meta.env.VITE_SERVICE_ID;
+    const templateId = import.meta.env.VITE_SUPPORT_TEMPLATE_ID;
+    const publicKey = import.meta.env.VITE_PUBLIC_KEY;
 
     emailjs.send(serviceId, templateId, contactForm, publicKey)
       .then((response) => {

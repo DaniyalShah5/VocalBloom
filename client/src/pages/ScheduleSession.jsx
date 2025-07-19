@@ -57,10 +57,10 @@ const ScheduleSession = () => {
 
     try {
       await emailjs.send(
-        "vocalBloom",
-        "template_tts3nas",
+        import.meta.env.VITE_SERVICE_ID,
+        import.meta.env.VITE_SCHEDULE_TEMPLATE_ID,
         templateParams,
-        "mvl3kKfDV5hhh_gR5"
+        import.meta.env.VITE_PUBLIC_KEY
       );
       setMessage(`Request sent successfully to ${therapist.profile.name}!`);
       setMessageType("success");
