@@ -18,7 +18,7 @@ export default function Home() {
             <div className="lg:w-1/2 order-1 lg:order-last flex">
               <div className="relative w-full h-full  overflow-hidden">
                 <img
-                  src="../../public/smile2.jpg"
+                  src="https://res.cloudinary.com/dpucsvoo6/image/upload/v1753020344/smile2_zr2dyv.jpg"
                   alt="Happy child playing"
                   className="w-full h-full object-cover object-center shadow-xl"
                 />
