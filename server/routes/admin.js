@@ -203,16 +203,4 @@ router.delete(
   }
 );
 
-router.get(
-  '/me',
-  verifyToken,
-  isAdmin,          
-  (req, res) => {
-    
-    const level = req.user.role; 
-    const permissions = req.user.permissions || {};
-    res.json({ level, permissions });
-  }
-);
-
 export default router;

@@ -16,7 +16,6 @@ const AdminPanel = () => {
   const [viewingImage, setViewingImage] = useState(null);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [userToDelete, setUserToDelete] = useState(null);
-  const [adminInfo, setAdminInfo] = useState({ level: "", permissions: [] });
 
   const token = localStorage.getItem("token");
 
@@ -72,24 +71,6 @@ const AdminPanel = () => {
     canApproveTherapists: "Approve therapist applications",
     canManageModules: "Manage therapy modules",
   };
-
-  useEffect(() => {
-    const fetchAdminInfo = async () => {
-      try {
-        const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/admin/me`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        setAdminInfo(res.data);
-      } catch (err) {
-        handleActionError(err);
-      }
-    };
-    fetchAdminInfo();
-  }, []);
-
-  const granted = Object.entries(adminInfo.permissions || {})
-    .filter(([, allowed]) => allowed)
-    .map(([key]) => permissionLabels[key]);
 
   const handleActionError = (error) => {
     if (error.response?.status === 403) {
@@ -910,52 +891,50 @@ const AdminPanel = () => {
                               )}
 
                               {/* Admin-specific details */}
-                              {user.role === "admin" && (
-                                <div>
-                                  <h4 className="font-semibold text-gray-800 mb-3">
-                                    Admin Details
-                                  </h4>
-                                  <div className="space-y-2 text-sm">
-                                    <div className="flex justify-between">
-                                      <span className="text-gray-600">
-                                        Admin Level:
-                                      </span>
-                                      <span className="font-medium text-gray-800">
-                                        {adminInfo.level || "N/A"}
-                                      </span>
-                                    </div>
+                              {user.role === "admin" &&
+                                (() => {
+                                  const granted = Object.entries(
+                                    user.permissions || {}
+                                  )
+                                    .filter(([_, allowed]) => allowed)
+                                    .map(([key]) => permissionLabels[key]);
 
-                                    {/* only show if there’s at least one granted permission */}
-                                    {granted.length > 0 ? (
-                                      <div className="mt-4">
-                                        <span className="text-gray-600 block mb-1">
-                                          Permissions:
+                                  return (
+                                    <div className="mt-4">
+                                      <h4 className="font-semibold text-gray-800 mb-2">
+                                        Admin Details
+                                      </h4>
+                                      <div className="flex justify-between text-sm">
+                                        <span className="text-gray-600">
+                                          Admin Level:
                                         </span>
-                                        <ul className="list-disc list-inside space-y-1">
+                                        <span className="font-medium text-gray-800">
+                                          {user.role === "admin"
+                                            ? "Administrator"
+                                            : "N/A"}
+                                        </span>
+                                      </div>
+
+                                      
+                                      {granted.length > 0 ? (
+                                        <ul className="list-disc list-inside mt-2 text-sm space-y-1">
                                           {granted.map((label) => (
                                             <li
                                               key={label}
                                               className="font-medium text-gray-800"
                                             >
-                                              • Permitted to{" "}
-                                              {label.toLowerCase()}
+                                              Permitted to {label.toLowerCase()}
                                             </li>
                                           ))}
                                         </ul>
-                                      </div>
-                                    ) : (
-                                      <div className="mt-4">
-                                        <span className="text-gray-600">
-                                          Permissions:
-                                        </span>
-                                        <span className="font-medium text-gray-800">
+                                      ) : (
+                                        <p className="text-sm text-gray-600 mt-2">
                                           No permissions granted
-                                        </span>
-                                      </div>
-                                    )}
-                                  </div>
-                                </div>
-                              )}
+                                        </p>
+                                      )}
+                                    </div>
+                                  );
+                                })()}
                             </div>
                           </div>
 
