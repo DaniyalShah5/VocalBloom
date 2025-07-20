@@ -10,6 +10,7 @@ const AdminPanel = () => {
   const [users, setUsers] = useState([]);
   const [pendingTherapists, setPendingTherapists] = useState([]);
   const [message, setMessage] = useState("");
+  const [messageType, setMessageType] = useState("");
   const [activeTab, setActiveTab] = useState("modules");
   const [expandedModule, setExpandedModule] = useState(null);
   const [expandedUser, setExpandedUser] = useState(null);
@@ -32,6 +33,7 @@ const AdminPanel = () => {
       setPendingModules(res.data);
     } catch (error) {
       setMessage("Error fetching modules: " + error.response?.data?.error);
+      setMessageType("error");
     }
   };
 
@@ -46,6 +48,7 @@ const AdminPanel = () => {
       setUsers(res.data);
     } catch (error) {
       setMessage("Error fetching users: " + error.response?.data?.error);
+      setMessageType("error");
     }
   };
 
@@ -62,6 +65,7 @@ const AdminPanel = () => {
       setMessage(
         "Error fetching pending therapists: " + error.response?.data?.error
       );
+      setMessageType("error");
     }
   };
 
@@ -77,6 +81,7 @@ const AdminPanel = () => {
       alert("You don't have permission to perform this action");
     } else {
       setMessage(error.response?.data?.error || "An error occurred");
+      setMessageType("error")
     }
   };
 
@@ -90,6 +95,7 @@ const AdminPanel = () => {
         }
       );
       setMessage(`Module "${res.data.title}" approved.`);
+      setMessageType("success");
       fetchPendingModules();
     } catch (error) {
       handleActionError(error);
@@ -108,6 +114,7 @@ const AdminPanel = () => {
         }
       );
       setMessage("Module disapproved successfully.");
+      setMessageType("success");
       fetchPendingModules();
     } catch (error) {
       handleActionError(error);
@@ -126,6 +133,7 @@ const AdminPanel = () => {
         }
       );
       setMessage("Therapist approved successfully.");
+      setMessageType("success");
       fetchPendingTherapists();
     } catch (error) {
       handleActionError(error);
@@ -144,6 +152,7 @@ const AdminPanel = () => {
         }
       );
       setMessage("Therapist rejected.");
+      setMessageType("success");
       fetchPendingTherapists();
     } catch (error) {
       handleActionError(error);
@@ -159,6 +168,7 @@ const AdminPanel = () => {
         }
       );
       setMessage("User deleted successfully.");
+      setMessageType("success");
       fetchUsers();
     } catch (error) {
       handleActionError(error);
@@ -212,9 +222,9 @@ const AdminPanel = () => {
 
         {/* Message Alert */}
         {message && (
-          <div className="mb-6 p-4 rounded-lg bg-white shadow-md border-l-4 border-blue-400">
+          <div className={`mb-6 p-4 rounded-lg bg-white shadow-md border-l-4 border-blue-400 ${messageType === "success" ? "border-green-400" : "border-red-400"}`}>
             <div className="flex items-center">
-              <div className="w-4 h-4 rounded-full bg-gradient-to-r from-[#8ec1db] to-[#db8ec1] mr-3"></div>
+              <div className={`w-4 h-4 rounded-full bg-gradient-to-r from-[#8ec1db] to-[#db8ec1] mr-3 ${messageType === "success" ? "bg-green-500" : "bg-red-500"}`}></div>
               <p className="text-gray-800 font-medium">{message}</p>
               <button
                 onClick={() => setMessage("")}
