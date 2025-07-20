@@ -4,9 +4,9 @@ import { Link } from 'react-router-dom';
 export default function Home() {
   const { user } = useAuth();
   const testimonies =[
-    {name:"dani",message:"hello world"},
-    {name:"kazmi",message:"hello world 2"},
-    {name:"shah",message:"hello world 3"}
+    {name:"Andrew Berg",message:"This site has been amazing for my son! The therapy modules are really easy to follow. I love that it's free and made just for kids."},
+    {name:"Susan gurzanski",message:"We’ve seen great improvement in our daughter’s speech since using this site. It’s simple, engaging, and doesn’t cost anything. Thank you!"},
+    {name:"Linda Berlin",message:"Very helpful and easy to use. My child actually enjoys the sessions! It’s a great resource for parents looking for free speech therapy support."}
   ]
   return (
     <div className="min-h-screen">
