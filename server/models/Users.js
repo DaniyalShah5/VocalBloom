@@ -23,7 +23,6 @@ const userSchema = new mongoose.Schema({
     name: { type: String, trim: true },
     contact: { type: String, trim: true },
     address: { type: String, trim: true },
-    // For child role
     disabilityType: { type: String, trim: true },
     additionalInfo: { type: String, trim: true },
   },

@@ -76,7 +76,7 @@ const AdminPanel = () => {
   useEffect(() => {
     const fetchAdminInfo = async () => {
       try {
-        const res = await axios.get(`${API}/api/admin/me`, {
+        const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/admin/me`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         setAdminInfo(res.data);
