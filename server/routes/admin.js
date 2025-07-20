@@ -14,11 +14,40 @@ const isAdmin = (req, res, next) => {
   next();
 };
 
+const canApproveTherapists = (req, res, next) => {
+  if (!req.user.permissions || !req.user.permissions.canApproveTherapists) {
+    return res.status(403).json({ error: 'Access denied. You do not have permission to approve therapists.' });
+  }
+  next();
+};
+
+const canManageModules = (req, res, next) => {
+  if (!req.user.permissions || !req.user.permissions.canManageModules) {
+    return res.status(403).json({ error: 'Access denied. You do not have permission to manage modules.' });
+  }
+  next();
+};
+
+const canDeleteUsers = (req, res, next) => {
+  if (!req.user.permissions || !req.user.permissions.canDeleteUsers) {
+    return res.status(403).json({ error: 'Access denied. You do not have permission to delete users.' });
+  }
+  next();
+};
+
+const canModifyUsers = (req, res, next) => {
+  if (!req.user.permissions || !req.user.permissions.canModifyUsers) {
+    return res.status(403).json({ error: 'Access denied. You do not have permission to view or modify users.' });
+  }
+  next();
+};
+
 
 router.get(
   '/pending-therapists',
   verifyToken, 
-  isAdmin,     
+  isAdmin,
+  canApproveTherapists,     
   async (req, res) => {
     try {
       const pendingTherapists = await User.find({
@@ -38,6 +67,7 @@ router.put(
   '/approve-therapist/:id',
   verifyToken,
   isAdmin,
+  canApproveTherapists,
   async (req, res) => {
     try {
       const therapist = await User.findByIdAndUpdate(
@@ -61,6 +91,7 @@ router.put(
   '/reject-therapist/:id',
   verifyToken,
   isAdmin,
+  canApproveTherapists,
   async (req, res) => {
     try {
       const therapist = await User.findByIdAndUpdate(
@@ -84,6 +115,7 @@ router.put(
   '/approve/:moduleId',
   verifyToken,
   isAdmin,
+  canManageModules,
   async (req, res) => {
     try {
       const therapyModule = await TherapyModule.findByIdAndUpdate(
@@ -103,7 +135,7 @@ router.put(
 );
 
 // Reject/Disapprove module route
-router.put('/reject-module/:id', verifyToken, async (req, res) => {
+router.put('/reject-module/:id', verifyToken, isAdmin, canManageModules, async (req, res) => {
   try {
     const moduleId = req.params.id;
     await TherapyModule.findByIdAndDelete(moduleId);
@@ -118,6 +150,7 @@ router.get(
   '/pending-modules',
   verifyToken,
   isAdmin,
+  canManageModules,
   async (req, res) => {
     try {
       const pendingModules = await TherapyModule.find({ approved: false })
@@ -136,6 +169,7 @@ router.get(
   '/users',
   verifyToken,
   isAdmin,
+  canModifyUsers,
   async (req, res) => {
     try {
       const users = await User.find({})
@@ -155,6 +189,7 @@ router.delete(
   '/users/:userId',
   verifyToken,
   isAdmin,
+  canDeleteUsers,
   async (req, res) => {
     try {
       const user = await User.findByIdAndDelete(req.params.userId);

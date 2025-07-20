@@ -1,82 +1,77 @@
-
 import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
 
 const userSchema = new mongoose.Schema({
-  role: { 
-    type: String, 
-    enum: ['parent', 'child', 'therapist', 'admin'],
-    required: true 
-  },
-  email: { 
-    type: String, 
+  email: {
+    type: String,
+    required: true,
     unique: true,
-    
-    required: function() { return this.role !== 'child'; }
+    lowercase: true,
+    trim: true,
   },
   password: {
     type: String,
-    
-    required: function() { return this.role !== 'child'; }
+    required: true,
+  },
+  role: {
+    type: String,
+    enum: ['child', 'parent', 'therapist', 'admin'], // Added 'admin' role
+    default: 'child',
+    required: true,
   },
   profile: {
-    name: { type: String, required: true },
-    disabilityType: { type: String }, 
-    contact: { type: String }, 
-    address: { type: String }, 
-    additionalInfo: { type: String }  
+    name: { type: String, trim: true },
+    contact: { type: String, trim: true },
+    address: { type: String, trim: true },
+    // For child role
+    disabilityType: { type: String, trim: true },
+    additionalInfo: { type: String, trim: true },
   },
- 
-  isVerified: {
-    type: Boolean,
-    default: false,
-    
-    required: function() { return this.role !== 'child'; }
+  qualifications: {
+    degree: { type: String, trim: true },
+    yearsOfExperience: { type: Number, default: 0 },
+    certifications: [{ type: String }], // Array of Cloudinary URLs
   },
-  verificationToken: {
-    type: String,
-    select: false 
-  },
-  verificationTokenExpires: {
-    type: Date,
-    select: false 
-  },
-  // Fields for therapist
+  specialties: [{ type: String }], // For therapist role
   therapistApplicationStatus: {
     type: String,
     enum: ['pending', 'approved', 'rejected'],
-    default: 'pending'
+    default: 'pending',
   },
-  
-  specialties: {
-    type: [String],
-    enum: [
-      'Articulation Disorders',
-      'Language Delays',
-      'Stuttering',
-      'Voice Disorders',
-      'Apraxia of Speech',
-      'Aphasia',
-      'Autism Spectrum Disorders',
-      'Swallowing Disorders',
-      'Hearing Impairments'
-    ],
-    default: []
+  isVerified: {
+    type: Boolean,
+    default: false,
   },
-  
-  qualifications: {
-    degree: { type: String },
-    certifications: [{type: String}],
-    yearsOfExperience: { type: Number }
+  verificationToken: String,
+  verificationTokenExpires: Date,
+  children: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  }],
+  // NEW: Permissions field for granular control, especially for 'admin' role
+  permissions: {
+    canDeleteUsers: { type: Boolean, default: false },
+    canModifyUsers: { type: Boolean, default: false }, // General modification, if you add such routes
+    canApproveTherapists: { type: Boolean, default: false },
+    canManageModules: { type: Boolean, default: false } // For approving/disapproving modules
   },
-  children: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }]
+  createdAt: {
+    type: Date,
+    default: Date.now,
+  },
+  updatedAt: {
+    type: Date,
+    default: Date.now,
+  },
 });
 
-// Password hashing middleware
+// Hash password before saving
 userSchema.pre('save', async function(next) {
-  if (!this.isModified('password')) return next();
-  this.password = await bcrypt.hash(this.password, 10);
+  if (this.isModified('password')) {
+    this.password = await bcrypt.hash(this.password, 10);
+  }
   next();
 });
 
-export default mongoose.model('User', userSchema);
+const User = mongoose.model('User', userSchema);
+export default User;
