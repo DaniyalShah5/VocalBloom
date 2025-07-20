@@ -133,7 +133,7 @@ const TherapyModules = () => {
 
           {loading ? (
             <div className="text-center py-10">
-              <ReactLoading type="cylon" color="#6B7280"  />
+              <ReactLoading type="spin" color="#6B7280" />
             </div>
           ) : error ? (
             <div className="bg-red-100 flex justify-center text-lg text-red-700 p-4 rounded-lg">

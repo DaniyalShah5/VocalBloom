@@ -280,7 +280,7 @@ const ModuleDetail = () => {
   if (loading) {
     return (
       <div className="flex justify-center items-center h-64">
-        <ReactLoading type="cylon" color="#6B7280"  />
+        <ReactLoading type="spin" color="#6B7280" />
       </div>
     );
   }
