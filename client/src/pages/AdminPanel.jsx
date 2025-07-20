@@ -27,11 +27,11 @@ const AdminPanel = () => {
       const res = await axios.get(`${BACKEND_BASE_URL}/api/auth/me`, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      setAdminPermissions(res.data.user.permissions || {});
+      setAdminPermissions(res.data.permissions);
     } catch (error) {
       console.error("Error fetching admin permissions:", error);
       setMessage("Error fetching admin permissions. Some features might be restricted.");
-      setAdminPermissions({}); 
+       
     }
   };
 
