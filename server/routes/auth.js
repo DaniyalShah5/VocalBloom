@@ -108,7 +108,7 @@ router.post("/login", async (req, res) => {
       
       for (const tryRole of possibleRoles) {
         
-        const foundUser = await User.findOne({ email, role: tryRole }).select('+verificationTokenExpires +isVerified');
+        const foundUser = await User.findOne({ email, role: tryRole }).select('+verificationTokenExpires +isVerified +permissions');
         if (foundUser) {
           user = foundUser;
           break;
@@ -177,7 +177,8 @@ router.post("/login", async (req, res) => {
         name: user.profile.name,
         role: user.role,
         isVerified: user.isVerified, 
-        verificationTokenExpires: user.verificationTokenExpires 
+        verificationTokenExpires: user.verificationTokenExpires ,
+        permissions: user.permissions
       }
     });
   } catch (error) {
