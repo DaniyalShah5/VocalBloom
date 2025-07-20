@@ -1,7 +1,7 @@
-// SessionContext.js
+
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useAuth } from './AuthContext';
-import { useSocket } from './SocketContext'; // Import your existing socket context
+import { useSocket } from './SocketContext'; 
 
 const SessionContext = createContext();
 
@@ -15,7 +15,7 @@ export const useSession = () => {
 
 export const SessionProvider = ({ children }) => {
   const { user } = useAuth();
-  const socket = useSocket(); // Use your existing socket context
+  const socket = useSocket(); 
   const [therapistPendingRequests, setTherapistPendingRequests] = useState([]);
   const [request, setRequest] = useState(null);
 
@@ -23,7 +23,7 @@ export const SessionProvider = ({ children }) => {
     if (!socket || !user) return;
 
     if (user.role === "therapist") {
-      // Fetch initial pending requests
+      
       fetchInitialRequests();
 
       const handleNewSessionRequest = (payload) => {

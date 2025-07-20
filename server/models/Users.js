@@ -15,7 +15,7 @@ const userSchema = new mongoose.Schema({
   },
   role: {
     type: String,
-    enum: ['child', 'parent', 'therapist', 'admin'], // Added 'admin' role
+    enum: ['child', 'parent', 'therapist', 'admin'], 
     default: 'child',
     required: true,
   },
@@ -30,9 +30,9 @@ const userSchema = new mongoose.Schema({
   qualifications: {
     degree: { type: String, trim: true },
     yearsOfExperience: { type: Number, default: 0 },
-    certifications: [{ type: String }], // Array of Cloudinary URLs
+    certifications: [{ type: String }], 
   },
-  specialties: [{ type: String }], // For therapist role
+  specialties: [{ type: String }], 
   therapistApplicationStatus: {
     type: String,
     enum: ['pending', 'approved', 'rejected'],
@@ -48,12 +48,12 @@ const userSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User'
   }],
-  // NEW: Permissions field for granular control, especially for 'admin' role
+  
   permissions: {
     canDeleteUsers: { type: Boolean, default: false },
-    canModifyUsers: { type: Boolean, default: false }, // General modification, if you add such routes
+    canModifyUsers: { type: Boolean, default: false }, 
     canApproveTherapists: { type: Boolean, default: false },
-    canManageModules: { type: Boolean, default: false } // For approving/disapproving modules
+    canManageModules: { type: Boolean, default: false } 
   },
   createdAt: {
     type: Date,
@@ -65,7 +65,6 @@ const userSchema = new mongoose.Schema({
   },
 });
 
-// Hash password before saving
 userSchema.pre('save', async function(next) {
   if (this.isModified('password')) {
     this.password = await bcrypt.hash(this.password, 10);

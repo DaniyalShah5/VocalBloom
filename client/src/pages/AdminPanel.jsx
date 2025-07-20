@@ -1,10 +1,9 @@
-
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Clock } from "lucide-react";
 import { User } from "lucide-react";
 import { GraduationCap } from "lucide-react";
-import {DeleteConfirmationModal} from '../component/DeleteConfirmationModal'; 
+import { DeleteConfirmationModal } from "../component/DeleteConfirmationModal";
 
 const AdminPanel = () => {
   const [pendingModules, setPendingModules] = useState([]);
@@ -17,12 +16,12 @@ const AdminPanel = () => {
   const [viewingImage, setViewingImage] = useState(null);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [userToDelete, setUserToDelete] = useState(null);
+  const [adminInfo, setAdminInfo] = useState({ level: "", permissions: [] });
 
   const token = localStorage.getItem("token");
 
   const BACKEND_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
-  
   const fetchPendingModules = async () => {
     try {
       const res = await axios.get(
@@ -37,19 +36,20 @@ const AdminPanel = () => {
     }
   };
 
-
   const fetchUsers = async () => {
     try {
-      const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/admin/users`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const res = await axios.get(
+        `${import.meta.env.VITE_API_BASE_URL}/api/admin/users`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
       setUsers(res.data);
     } catch (error) {
       setMessage("Error fetching users: " + error.response?.data?.error);
     }
   };
 
-  
   const fetchPendingTherapists = async () => {
     try {
       const res = await axios.get(
@@ -66,14 +66,39 @@ const AdminPanel = () => {
     }
   };
 
+  const permissionLabels = {
+    canDeleteUsers: "Delete users",
+    canModifyUsers: "Modify user data",
+    canApproveTherapists: "Approve therapist applications",
+    canManageModules: "Manage therapy modules",
+  };
+
+  useEffect(() => {
+    const fetchAdminInfo = async () => {
+      try {
+        const res = await axios.get(`${API}/api/admin/me`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setAdminInfo(res.data);
+      } catch (err) {
+        handleActionError(err);
+      }
+    };
+    fetchAdminInfo();
+  }, []);
+
+  const granted = Object.entries(adminInfo.permissions || {})
+    .filter(([, allowed]) => allowed)
+    .map(([key]) => permissionLabels[key]);
+
   const handleActionError = (error) => {
     if (error.response?.status === 403) {
       alert("You don't have permission to perform this action");
     } else {
-      setMessage(error.response?.data?.error || 'An error occurred');
+      setMessage(error.response?.data?.error || "An error occurred");
     }
   };
-  
+
   const approveModule = async (moduleId) => {
     try {
       const res = await axios.put(
@@ -93,24 +118,27 @@ const AdminPanel = () => {
   const disapproveModule = async (moduleId) => {
     try {
       await axios.put(
-        `${import.meta.env.VITE_API_BASE_URL}/api/admin/reject-module/${moduleId}`,
+        `${
+          import.meta.env.VITE_API_BASE_URL
+        }/api/admin/reject-module/${moduleId}`,
         {},
         {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
       setMessage("Module disapproved successfully.");
-      fetchPendingModules(); 
+      fetchPendingModules();
     } catch (error) {
       handleActionError(error);
     }
   };
 
- 
   const approveTherapist = async (therapistId) => {
     try {
       await axios.put(
-        `${import.meta.env.VITE_API_BASE_URL}/api/admin/approve-therapist/${therapistId}`,
+        `${
+          import.meta.env.VITE_API_BASE_URL
+        }/api/admin/approve-therapist/${therapistId}`,
         {},
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -123,11 +151,12 @@ const AdminPanel = () => {
     }
   };
 
-
   const rejectTherapist = async (therapistId) => {
     try {
       await axios.put(
-        `${import.meta.env.VITE_API_BASE_URL}/api/admin/reject-therapist/${therapistId}`,
+        `${
+          import.meta.env.VITE_API_BASE_URL
+        }/api/admin/reject-therapist/${therapistId}`,
         {},
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -140,12 +169,14 @@ const AdminPanel = () => {
     }
   };
 
-  
   const deleteUser = async (userId) => {
     try {
-      await axios.delete(`${import.meta.env.VITE_API_BASE_URL}/api/admin/users/${userId}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      await axios.delete(
+        `${import.meta.env.VITE_API_BASE_URL}/api/admin/users/${userId}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
       setMessage("User deleted successfully.");
       fetchUsers();
     } catch (error) {
@@ -153,26 +184,23 @@ const AdminPanel = () => {
     }
   };
 
-  
-const handleDeleteClick = (user) => {
-  setUserToDelete(user);
-  setShowDeleteConfirm(true);
-};
+  const handleDeleteClick = (user) => {
+    setUserToDelete(user);
+    setShowDeleteConfirm(true);
+  };
 
+  const handleConfirmDelete = async () => {
+    if (userToDelete) {
+      await deleteUser(userToDelete._id || userToDelete.id);
+      setShowDeleteConfirm(false);
+      setUserToDelete(null);
+    }
+  };
 
-const handleConfirmDelete = async () => {
-  if (userToDelete) {
-    await deleteUser(userToDelete._id || userToDelete.id);
+  const handleCancelDelete = () => {
     setShowDeleteConfirm(false);
     setUserToDelete(null);
-  }
-};
-
-
-const handleCancelDelete = () => {
-  setShowDeleteConfirm(false);
-  setUserToDelete(null);
-};
+  };
 
   useEffect(() => {
     fetchPendingModules();
@@ -573,11 +601,11 @@ const handleCancelDelete = () => {
                                       key={idx}
                                       href={certUrl}
                                       target="_blank"
-                                      rel="noopener noreferrer" 
-                                      className="relative group overflow-hidden rounded-md shadow-sm block" 
+                                      rel="noopener noreferrer"
+                                      className="relative group overflow-hidden rounded-md shadow-sm block"
                                     >
                                       <img
-                                        src={certUrl} 
+                                        src={certUrl}
                                         alt={`Certification ${idx + 1}`}
                                         className="w-full h-42 object-cover transition-transform duration-300 group-hover:scale-105"
                                         onError={(e) => {
@@ -694,7 +722,6 @@ const handleCancelDelete = () => {
                             🗑️ Delete
                           </button>
                         </div>
-                        
                       </div>
 
                       {/* Expanded User Details */}
@@ -894,17 +921,38 @@ const handleCancelDelete = () => {
                                         Admin Level:
                                       </span>
                                       <span className="font-medium text-gray-800">
-                                        System Administrator
+                                        {adminInfo.level || "N/A"}
                                       </span>
                                     </div>
-                                    <div className="flex justify-between">
-                                      <span className="text-gray-600">
-                                        Permissions:
-                                      </span>
-                                      <span className="font-medium text-gray-800">
-                                        Full Access
-                                      </span>
-                                    </div>
+
+                                    {/* only show if there’s at least one granted permission */}
+                                    {granted.length > 0 ? (
+                                      <div className="mt-4">
+                                        <span className="text-gray-600 block mb-1">
+                                          Permissions:
+                                        </span>
+                                        <ul className="list-disc list-inside space-y-1">
+                                          {granted.map((label) => (
+                                            <li
+                                              key={label}
+                                              className="font-medium text-gray-800"
+                                            >
+                                              • Permitted to{" "}
+                                              {label.toLowerCase()}
+                                            </li>
+                                          ))}
+                                        </ul>
+                                      </div>
+                                    ) : (
+                                      <div className="mt-4">
+                                        <span className="text-gray-600">
+                                          Permissions:
+                                        </span>
+                                        <span className="font-medium text-gray-800">
+                                          No permissions granted
+                                        </span>
+                                      </div>
+                                    )}
                                   </div>
                                 </div>
                               )}
@@ -977,7 +1025,6 @@ const handleCancelDelete = () => {
                               </div>
                             )}
 
-                          
                           {/* Render Certifications (Images) */}
                           <div className="md:col-span-2 mt-2">
                             <div className="flex items-center mb-2">
@@ -995,7 +1042,6 @@ const handleCancelDelete = () => {
                                       key={idx}
                                       className="relative group overflow-hidden rounded-md shadow-sm cursor-pointer"
                                       onClick={() => {
-                                        
                                         setViewingImage(certUrl);
                                       }}
                                     >
@@ -1068,13 +1114,16 @@ const handleCancelDelete = () => {
         </div>
       </div>
       <DeleteConfirmationModal
-  isOpen={showDeleteConfirm}
-  onConfirm={handleConfirmDelete}
-  onCancel={handleCancelDelete}
-  userName={userToDelete?.profile.name || userToDelete?.firstName + ' ' + userToDelete?.lastName}
-  email={userToDelete?.email }
-  userRole={userToDelete?.role}
-/>
+        isOpen={showDeleteConfirm}
+        onConfirm={handleConfirmDelete}
+        onCancel={handleCancelDelete}
+        userName={
+          userToDelete?.profile.name ||
+          userToDelete?.firstName + " " + userToDelete?.lastName
+        }
+        email={userToDelete?.email}
+        userRole={userToDelete?.role}
+      />
     </div>
   );
 };
