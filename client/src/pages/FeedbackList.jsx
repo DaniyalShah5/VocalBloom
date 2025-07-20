@@ -4,6 +4,7 @@ import axios from 'axios';
 export default function FeedbackList({ childId }) {
   const [feedbacks, setFeedbacks] = useState([]);
   const token = localStorage.getItem('token');
+  const [error, setError] = useState("");
 
   useEffect(() => {
     const fetchFeedbacks = async () => {
@@ -13,8 +14,9 @@ export default function FeedbackList({ childId }) {
           { headers: { Authorization: `Bearer ${token}` } }
         );
         setFeedbacks(response.data);
-      } catch (error) {
-        console.error('Error fetching feedbacks:', error);
+        setError("");  
+      } catch (err) {
+        setError("Failed to load feedback. Please try again later.");
       }
     };
 
@@ -22,7 +24,7 @@ export default function FeedbackList({ childId }) {
   }, [childId, token]);
 
   if (!childId) return null;
-console.log(feedbacks)
+
   return (
     <div className="space-y-4">
       {feedbacks.length === 0 ? (

@@ -40,7 +40,6 @@ const VerificationBanner = () => {
           if (intervalRef.current) {
             clearInterval(intervalRef.current);
           }
-          console.log("Verification grace period expired. User may need to log in again.");
           
           if (user && user.email) {
             axios.get('/api/auth/me')

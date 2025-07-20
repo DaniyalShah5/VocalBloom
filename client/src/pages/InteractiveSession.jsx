@@ -32,7 +32,6 @@ export default function InteractiveSession() {
 
 useEffect(() => {
     if (socket && user) {
-        console.log('Client: Emitting "register" event for:', user._id, user.role);
         socket.emit('register', { userId: user._id, role: user.role });
     }
 }, [socket, user]); 
@@ -82,7 +81,6 @@ useEffect(() => {
             }
         })
         .catch((err) => {
-            console.error("Error fetching session request(s):", err);
             setRequest(null);
             setTherapistPendingRequests([]); 
             setCountdown(null);
@@ -109,7 +107,6 @@ useEffect(() => {
 
     if (user.role === "therapist") {
         const handleNewSessionRequest = (payload) => {
-            console.log('THERAPIST: Received new_session_request:', payload);
             
             setTherapistPendingRequests(prevRequests => {
                 
@@ -131,7 +128,6 @@ useEffect(() => {
         socket.on("new_session_request", handleNewSessionRequest);
 
         const handleSessionRequestDeleted = (payload) => {
-            console.log('THERAPIST: Received session_request_deleted:', payload);
             setTherapistPendingRequests(prevRequests =>
                 prevRequests.filter(req => req._id !== payload.requestId)
             );
@@ -145,7 +141,6 @@ useEffect(() => {
     }
 
     const handleSessionRequestUpdated = (payload) => {
-        console.log('CLIENT: Received session_request_updated:', payload);
 
         if (user.role === "therapist") {
             setTherapistPendingRequests(prevRequests =>
@@ -205,7 +200,6 @@ useEffect(() => {
         
       })
       .catch((err) => {
-        console.error("Error:", err.response?.data?.error || err.message);
         setError("Failed to create session request. Please try again.");
       })
       .finally(() => setLoading(false));
@@ -865,7 +859,7 @@ const cancelCurrentRequest = () => {
               </div>
               <div className="p-6">
                 <FeedbackList childId={childId} />
-                {console.log('sid: ',childId)}
+                
               </div>
             </div>
           </div>

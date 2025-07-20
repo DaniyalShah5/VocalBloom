@@ -16,8 +16,6 @@ const EmailVerificationSuccess = () => {
       const params = new URLSearchParams(location.search);
       const token = params.get('token');
 
-      
-
       if (!token) {
         setVerificationStatus('Error: No verification token found in the URL. Please ensure you clicked the complete link from your email or request a new one.');
         setIsSuccess(false);
@@ -26,7 +24,6 @@ const EmailVerificationSuccess = () => {
 
       try {
         const response = await axios.get(`/api/auth/verify-email?token=${token}`);
-        console.log('EmailVerificationSuccess: API response status ->', response.status);
         
         setVerificationStatus(response.data.message); 
         setIsSuccess(true);
@@ -52,7 +49,7 @@ const EmailVerificationSuccess = () => {
             const storedUser = JSON.parse(localStorage.getItem('user'));
             if (storedUser && storedUser.email === user.email) {
               updateUser({ ...storedUser, isVerified: true });
-              console.log('EmailVerificationSuccess: User state updated in AuthContext (due to prior successful verification).');
+              
             }
           }
         } else {

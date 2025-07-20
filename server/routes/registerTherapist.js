@@ -21,9 +21,6 @@ const storage = new CloudinaryStorage({
 const upload = multer({ storage: storage });
 
 router.post('/', upload.array('certifications', 5), async (req, res) => {
-  console.log("[Route Start] Received therapist registration request.");
-  console.log("req.body:", req.body);
-  console.log("req.files:", req.files);
   try {
     const { email, password, name, contact, address, authDegree, yearsOfExperience } = req.body;
 
@@ -39,7 +36,6 @@ router.post('/', upload.array('certifications', 5), async (req, res) => {
   
     const existingUser = await User.findOne({ email });
     if (existingUser) {
-      console.log(`[Registration Error] Email already registered: ${email}`);
 
       return res.status(400).json({ error: 'Email is already registered' });
     }
@@ -49,7 +45,6 @@ router.post('/', upload.array('certifications', 5), async (req, res) => {
       req.files.forEach(file => {
         
         certificationUrls.push(file.path); 
-        console.log(`[File URL] Storing certification URL: ${file.path}`);
       });
     }
 
@@ -103,7 +98,6 @@ router.post('/', upload.array('certifications', 5), async (req, res) => {
       }
     });
   } catch (error) {
-    console.error("Therapist registration error:", error);
     
     res.status(500).json({ error: error.message });
   }

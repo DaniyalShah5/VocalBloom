@@ -27,7 +27,6 @@ export const SessionProvider = ({ children }) => {
       fetchInitialRequests();
 
       const handleNewSessionRequest = (payload) => {
-        console.log('THERAPIST: Received new_session_request:', payload);
         
         setTherapistPendingRequests(prevRequests => {
           if (prevRequests.some(req => req._id === payload.requestId)) {
@@ -47,7 +46,6 @@ export const SessionProvider = ({ children }) => {
       };
 
       const handleSessionRequestDeleted = (payload) => {
-        console.log('THERAPIST: Received session_request_deleted:', payload);
         setTherapistPendingRequests(prevRequests =>
           prevRequests.filter(req => req._id !== payload.requestId)
         );
@@ -63,7 +61,6 @@ export const SessionProvider = ({ children }) => {
     }
 
     const handleSessionRequestUpdated = (payload) => {
-      console.log('CLIENT: Received session_request_updated:', payload);
 
       if (user.role === "therapist") {
         setTherapistPendingRequests(prevRequests =>
