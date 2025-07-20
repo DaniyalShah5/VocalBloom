@@ -46,8 +46,7 @@ const canModifyUsers = (req, res, next) => {
 router.get(
   '/pending-therapists',
   verifyToken, 
-  isAdmin,
-  canApproveTherapists,     
+  isAdmin,     
   async (req, res) => {
     try {
       const pendingTherapists = await User.find({
@@ -134,7 +133,7 @@ router.put(
   }
 );
 
-// Reject/Disapprove module route
+
 router.put('/reject-module/:id', verifyToken, isAdmin, canManageModules, async (req, res) => {
   try {
     const moduleId = req.params.id;
@@ -150,7 +149,7 @@ router.get(
   '/pending-modules',
   verifyToken,
   isAdmin,
-  canManageModules,
+  
   async (req, res) => {
     try {
       const pendingModules = await TherapyModule.find({ approved: false })
@@ -169,7 +168,7 @@ router.get(
   '/users',
   verifyToken,
   isAdmin,
-  canModifyUsers,
+  
   async (req, res) => {
     try {
       const users = await User.find({})

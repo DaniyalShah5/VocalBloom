@@ -47,12 +47,12 @@ export function AuthProvider({ children }) {
     try {
       const { data } = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/auth/register`, userData);
       localStorage.setItem('token', data.token);
-      console.log('AuthContext: User data received after registration:', data.user); 
+      
       saveUserData(data.user);
       return data;
     } catch (error) {
       if (error.response?.data?.user) {
-        console.log('AuthContext: Partial user data received after failed registration:', error.response.data.user); 
+        
         saveUserData(error.response.data.user);
       }
       throw new Error(error.response?.data?.error || 'Registration failed');
@@ -61,16 +61,16 @@ export function AuthProvider({ children }) {
 
   const login = async (credentials) => {
     try {
-      console.log('AuthContext: Login credentials:', credentials); 
+      
       const { data } = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/auth/login`, credentials);
       localStorage.setItem('token', data.token);
-      console.log('AuthContext: User data received after login:', data.user); 
+      
       saveUserData(data.user); 
       return data;
     } catch (error) {
       console.error('AuthContext: Login error:', error.response?.data || error.message); 
       if (error.response?.data?.user) {
-        console.log('AuthContext: Partial user data received after failed login:', error.response.data.user); 
+        
         saveUserData(error.response.data.user);
       }
       throw new Error(error.response?.data?.error || 'Login failed');

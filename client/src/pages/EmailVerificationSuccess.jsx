@@ -16,8 +16,7 @@ const EmailVerificationSuccess = () => {
       const params = new URLSearchParams(location.search);
       const token = params.get('token');
 
-      console.log('EmailVerificationSuccess: location.search ->', location.search);
-      console.log('EmailVerificationSuccess: Extracted token ->', token);
+      
 
       if (!token) {
         setVerificationStatus('Error: No verification token found in the URL. Please ensure you clicked the complete link from your email or request a new one.');
