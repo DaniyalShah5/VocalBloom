@@ -131,8 +131,8 @@ const TherapyModules = () => {
           </div>
 
           {loading ? (
-            <div className="text-center py-10">
-              <div className="w-10 h-10 border-4 border-gray-300 border-t-blue-500 rounded-full animate-spin mx-auto"></div>
+            <div className="flex flex-col justify-center items-center py-10">
+              <div className="w-15 h-15 border-4 border-gray-300 border-t-blue-500 rounded-full animate-spin mx-auto"></div>
               <p className="mt-4">Loading...</p>
             </div>
           ) : error ? (
