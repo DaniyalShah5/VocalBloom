@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import ReactLoading from 'react-loading';
 
 const ModuleDetail = () => {
   const { moduleId } = useParams();
@@ -279,7 +280,7 @@ const ModuleDetail = () => {
   if (loading) {
     return (
       <div className="flex justify-center items-center h-64">
-        <p>Loading module details...</p>
+        <ReactLoading type="cylon" color="#6B7280"  />
       </div>
     );
   }
