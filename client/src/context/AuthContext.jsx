@@ -45,7 +45,7 @@ export function AuthProvider({ children }) {
 
   const register = async (userData) => {
     try {
-      const { data } = await axios.post('/api/auth/register', userData);
+      const { data } = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/auth/register`, userData);
       localStorage.setItem('token', data.token);
       console.log('AuthContext: User data received after registration:', data.user); 
       saveUserData(data.user);
@@ -62,7 +62,7 @@ export function AuthProvider({ children }) {
   const login = async (credentials) => {
     try {
       console.log('AuthContext: Login credentials:', credentials); 
-      const { data } = await axios.post('/api/auth/login', credentials);
+      const { data } = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/auth/login`, credentials);
       localStorage.setItem('token', data.token);
       console.log('AuthContext: User data received after login:', data.user); 
       saveUserData(data.user); 
