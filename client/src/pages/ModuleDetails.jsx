@@ -2,7 +2,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import ReactLoading from 'react-loading';
 
 const ModuleDetail = () => {
   const { moduleId } = useParams();
@@ -280,7 +279,8 @@ const ModuleDetail = () => {
   if (loading) {
     return (
       <div className="flex justify-center items-center h-64">
-        <ReactLoading type="spin" color="#6B7280" />
+        <div className='w-10 h-10 border-4 border-gray-300 border-t-blue-500 rounded-full animate-spin mx-auto'></div>
+        <p>Loading module details...</p>
       </div>
     );
   }

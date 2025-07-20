@@ -2,7 +2,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
-import ReactLoading from 'react-loading';
 
 const TherapyModules = () => {
   const [categories, setCategories] = useState([
@@ -133,7 +132,8 @@ const TherapyModules = () => {
 
           {loading ? (
             <div className="text-center py-10">
-              <ReactLoading type="spin" color="#6B7280" />
+              <div className="w-10 h-10 border-4 border-gray-300 border-t-blue-500 rounded-full animate-spin mx-auto"></div>
+              <p className="mt-4">Loading...</p>
             </div>
           ) : error ? (
             <div className="bg-red-100 flex justify-center text-lg text-red-700 p-4 rounded-lg">
