@@ -238,12 +238,12 @@ const AdminPanel = () => {
 
         {/* Tab Navigation */}
         <div className="mb-8">
-          <div className="flex flex-wrap gap-2 p-2 bg-white rounded-xl shadow-lg">
+          <div className="flex items-center justify-center flex-wrap gap-2 p-2 bg-white rounded-xl shadow-lg">
             {tabs.map((tab) => (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`px-6 py-3 rounded-lg font-semibold transition-all duration-300 flex items-center space-x-2 ${
+                className={`px-6 py-3 w-full sm:w-fit rounded-lg font-semibold transition-all duration-300 flex items-center space-x-2 ${
                   activeTab === tab.id
                     ? "bg-gradient-to-r from-[#8ec1db] to-[#db8ec1] text-white shadow-lg transform scale-105"
                     : "text-gray-600 hover:bg-gray-50 hover:text-gray-800"
@@ -292,7 +292,7 @@ const AdminPanel = () => {
                       key={module._id}
                       className="bg-gradient-to-r from-gray-50 to-white rounded-xl p-6 border border-gray-200 hover:shadow-lg transition-all duration-300"
                     >
-                      <div className="flex justify-between items-start mb-4">
+                      <div className="flex flex-col gap-5 mx-auto mb-4 sm:flex-row ">
                         <div className="flex-1">
                           <h3 className="text-xl font-bold text-gray-800 mb-2">
                             {module.title}
@@ -309,7 +309,7 @@ const AdminPanel = () => {
                             </span>
                           </div>
                         </div>
-                        <div className="ml-4 flex gap-2">
+                        <div className="flex flex-col sm:flex-row mt-auto justify-end gap-3">
                           <button
                             onClick={() =>
                               setExpandedModule(
@@ -666,14 +666,14 @@ const AdminPanel = () => {
                       key={user._id}
                       className="bg-gradient-to-r from-gray-50 to-white rounded-xl p-6 border border-gray-200 hover:shadow-lg transition-all duration-300"
                     >
-                      <div className="flex justify-between items-center">
-                        <div className="flex items-center space-x-4">
+                      <div className="flex flex-col md:flex-row md:justify-between gap-2 md:items-center">
+                        <div className="flex flex-col sm:flex-row sm:items-center space-x-4">
                           <div className="w-12 h-12 rounded-full bg-gradient-to-r from-[#8ec1db] to-[#db8ec1] flex items-center justify-center text-white font-bold text-lg">
                             {(user.profile?.name || user.email)
                               .charAt(0)
                               .toUpperCase()}
                           </div>
-                          <div>
+                          <div className="">
                             <h3 className="text-lg font-bold text-gray-800">
                               {user.profile?.name || "Unnamed User"}
                             </h3>
@@ -693,14 +693,14 @@ const AdminPanel = () => {
                             </span>
                           </div>
                         </div>
-                        <div className="flex gap-2">
+                        <div className="flex justify-center gap-2">
                           <button
                             onClick={() =>
                               setExpandedUser(
                                 expandedUser === user._id ? null : user._id
                               )
                             }
-                            className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg font-medium hover:bg-gray-200 transition-all duration-300"
+                            className="px-4 py-2 bg-gray-100 w-full text-nowrap text-gray-700 rounded-lg font-medium hover:bg-gray-200 transition-all duration-300"
                           >
                             {expandedUser === user._id
                               ? "Hide Details"
@@ -708,9 +708,9 @@ const AdminPanel = () => {
                           </button>
                           <button
                             onClick={() => handleDeleteClick(user)}
-                            className="px-6 py-2 bg-gradient-to-r from-red-400 to-red-500 text-white rounded-lg font-semibold hover:shadow-lg transform hover:scale-105 transition-all duration-300"
+                            className="px-6 py-2 bg-gradient-to-r w-full from-red-400 to-red-500 text-white rounded-lg font-semibold hover:shadow-lg transform hover:scale-105 transition-all duration-300"
                           >
-                            🗑️ Delete
+                            Delete
                           </button>
                         </div>
                       </div>

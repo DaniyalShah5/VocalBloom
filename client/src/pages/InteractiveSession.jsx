@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import FeedbackForm from "./FeedbackForm";
 import FeedbackList from "./FeedbackList";
 import TherapistRequestList from "./TherapistRequestList";
@@ -29,6 +30,7 @@ export default function InteractiveSession() {
   const [countdown, setCountdown] = useState(null);
   const socket = useSocket();
   const [therapistPendingRequests, setTherapistPendingRequests] = useState([]);
+  const navigate = useNavigate();
 
 useEffect(() => {
     if (socket && user) {
@@ -1203,7 +1205,7 @@ const cancelCurrentRequest = () => {
 
             <div className="text-center mt-8">
               <button
-                onClick={() => (window.location.href = "/dashboard")}
+                onClick={() => navigate("/dashboard")}
                 className="bg-[#8ec1db] text-white px-8 py-3 rounded-xl font-medium transition-all duration-200 transform hover:scale-105 shadow-lg"
               >
                 Return to Dashboard
@@ -1231,7 +1233,7 @@ const cancelCurrentRequest = () => {
             session interface.
           </p>
           <button
-            onClick={() => (window.location.href = "/")}
+            onClick={() => navigate("/")}
             className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white px-6 py-3 rounded-lg font-medium transition-all duration-200 transform hover:scale-105 shadow-lg"
           >
             Return to Homepage

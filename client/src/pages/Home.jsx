@@ -229,12 +229,12 @@ export default function Home() {
           <p className="text-xl mb-8">
             Join our community and access all features at no cost
           </p>
-          <a
-            href="/register"
+          <Link
+            to="/register"
             className="inline-block px-8 py-3 bg-[#8ec1db] text-white rounded-lg text-lg font-semibold  hover:scale-105 transition-transform duration-150"
           >
             Create Free Account
-          </a>
+          </Link>
         </div>
         )}
         

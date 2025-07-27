@@ -214,13 +214,13 @@ const Login = () => {
       <div className="mt-4 text-center">
         <p className="text-gray-600">
           Don't have an account?{' '}
-          <a href="/register" className="text-blue-600 hover:underline">
+          <Link to="/register" className="text-blue-600 hover:underline">
             Register as Parent
-          </a>{' '}
+          </Link>{' '}
           or{' '}
-          <a href="/register/therapist" className="text-blue-600 hover:underline">
+          <Link to="/register/therapist" className="text-blue-600 hover:underline">
             Register as Therapist
-          </a>
+          </Link>
         </p>
       </div>
     </div>

@@ -1,3 +1,4 @@
+import {Link} from 'react-router-dom';
 export default function Footer(){
     return(
         
@@ -13,17 +14,17 @@ export default function Footer(){
           <div>
             <h4 className="text-sm font-semibold mb-4">Resources</h4>
             <ul className="space-y-2 text-sm">
-              <li><a href="/therapy-modules" className="text-gray-400 hover:text-white">Therapy Modules</a></li>
-              <li><a href="/interactive-session" className="text-gray-400 hover:text-white">Interactive Session</a></li>
-              <li><a href="/progress" className="text-gray-400 hover:text-white">Progress Tracking</a></li>
+              <li><Link to="/therapy-modules" className="text-gray-400 hover:text-white">Therapy Modules</Link></li>
+              <li><Link to="/interactive-session" className="text-gray-400 hover:text-white">Interactive Session</Link></li>
+              <li><Link to="/progress" className="text-gray-400 hover:text-white">Progress Tracking</Link></li>
             </ul>
           </div>
           <div>
             <h4 className="text-sm font-semibold mb-4">Support</h4>
             <ul className="space-y-2 text-sm">
-              <li><a href="/schedule" className="text-gray-400 hover:text-white">Schedule Session</a></li>
-              <li><a href="/support" className="text-gray-400 hover:text-white">Contact</a></li>
-              <li><a href="/support" className="text-gray-400 hover:text-white">Support</a></li>
+              <li><Link to="/schedule" className="text-gray-400 hover:text-white">Schedule Session</Link></li>
+              <li><Link to="/support" className="text-gray-400 hover:text-white">Contact</Link></li>
+              <li><Link to="/support" className="text-gray-400 hover:text-white">Support</Link></li>
             </ul>
           </div>
         </div>

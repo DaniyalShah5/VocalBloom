@@ -99,9 +99,20 @@ function Navigation() {
     <nav className="bg-white shadow-lg mb-2">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-20">
+          {/* Mobile: Menu Button  */}
+          <div className="lg:hidden flex items-center space-x-3">
+            <button
+              onClick={() => setMenuOpen(!menuOpen)}
+              className="text-gray-800 focus:outline-none"
+            >
+              {menuOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
+
+            
+          </div>
           {/* Logo */}
-          <div className="flex-shrink-0 flex items-center">
-            <span className="text-3xl font-bold text-[#db8ec1] hover:scale-110 duration-200">
+          <div className=" flex items-center ml-3">
+            <span className="text-2xl  sm:text-3xl font-bold text-[#db8ec1] hover:scale-110 duration-200 ">
               <Link to="/" className="mr-4">
                 VocalBloom
               </Link>
@@ -109,7 +120,7 @@ function Navigation() {
           </div>
 
           {/* Desktop Nav */}
-          <div className="hidden md:flex space-x-5">
+          <div className="hidden lg:flex space-x-5">
             {navItems.map((item, index) =>
               shouldShowNavItem(item) && (
                 <div key={index}>
@@ -120,7 +131,7 @@ function Navigation() {
           </div>
 
           {/* Desktop Auth/Profile */}
-          <div className="hidden md:flex items-center space-x-4">
+          <div className="hidden lg:flex items-center space-x-4">
             {!user ? (
               <>
                 <Link
@@ -140,35 +151,27 @@ function Navigation() {
               <ProfileMenu />
             )}
           </div>
-
-          {/* Mobile: Menu Button  */}
-          <div className="md:hidden flex items-center space-x-3">
-            <button
-              onClick={() => setMenuOpen(!menuOpen)}
-              className="text-gray-800 focus:outline-none"
-            >
-              {menuOpen ? <X size={24} /> : <Menu size={24} />}
-            </button>
-
+          <div className="lg:hidden flex items-center space-x-1 ml-auto">
             {user ? (
               <ProfileMenu />
             ) : (
               <>
                 <Link
                   to="/login"
-                  className="text-sm text-gray-700 hover:underline"
+                  className="text-sm  px-4 py-2 text-gray-700 rounded-sm "
                 >
                   Login
                 </Link>
                 <Link
                   to="/register"
-                  className="text-sm text-white bg-[#88c6e4] px-2 py-1 rounded hover:bg-[#88c5e4de]"
+                  className="text-sm text-white bg-[#88c6e4] px-3 py-2 hover:bg-[#88c5e4de]"
                 >
                   Register
                 </Link>
               </>
             )}
           </div>
+
         </div>
       </div>
 
