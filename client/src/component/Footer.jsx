@@ -4,8 +4,8 @@ export default function Footer(){
         
       <footer className="bg-gray-900 text-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-        <div className="grid md:grid-cols-4 gap-8 text-center md:text-left">
-          <div className="md:col-span-2">
+        <div className="grid grid-col-2 md:grid-cols-4 gap-8 text-center md:text-left">
+          <div className="col-span-2 md:col-span-2">
             <h3 className="text-xl font-bold mb-4">VocalBloom</h3>
             <p className="text-gray-400 text-sm">
               Free speech development resources for everyone

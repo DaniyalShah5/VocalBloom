@@ -126,8 +126,8 @@ const RegisterTherapist = () => {
     : "text-green-500 text-green-700";
 
   return (
-    <div className="max-w-xl mx-auto mt-10 mb-10  bg-white sm:border sm:border-gray-200 rounded-lg sm:shadow-lg">
-      <div className='bg-[#db8ec1] p-3 py-5 sm:rounded-t-lg'>
+    <div className="max-w-xl mx-auto mt-10 mb-10 flex flex-col items-center justify-center p-3">
+      <div className='bg-[#db8ec1] p-3 py-5 rounded-t-lg w-full shadow-lg'>
       <h1 className="text-2xl font-bold  text-center text-white">
         Therapist Registration
       </h1>
@@ -136,7 +136,7 @@ const RegisterTherapist = () => {
       </h2>
       </div>
       {registrationSuccess ? (
-        <div className="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 rounded-md" role="alert">
+        <div className="bg-green-100 border-l-4 w-full border-green-500 text-green-700 p-4 rounded-md" role="alert">
           <p className="font-bold">Registration Successful!</p>
           <p>A verification link has been sent to <span className="font-semibold">{formData.email}</span>. Please check your inbox to verify your account.</p>
           <Link to="/login" className="mt-4 inline-block bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full transition duration-300">
@@ -145,8 +145,8 @@ const RegisterTherapist = () => {
         </div>
       ) : (
         <>
-          {message && <p className={`px-6 py-4 ${messageColorClass}`}>{message}</p>}
-          <form onSubmit={handleSubmit} className="space-y-4 p-6">
+          {message && <p className={`px-6 py-4 w-full ${messageColorClass}`}>{message}</p>}
+          <form onSubmit={handleSubmit} className="space-y-4 p-6 w-full border-0 border-t-0 border-gray-300 rounded-b-lg shadow-lg">
             <label className="block text-gray-700 mb-1">Name:</label>
             <input
               type="text"

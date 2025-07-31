@@ -131,8 +131,8 @@ const RegisterParent = () => {
   const messageColorClass = isError ? "text-red-500 bg-red-100" : "text-green-500 bg-green-100";
 
   return (
-    <div className="max-w-xl mx-auto mt-10 mb-10  bg-white sm:border sm:border-gray-200 rounded-lg sm:shadow-lg">
-      <div className='bg-[#db8ec1] p-3 py-5 sm:rounded-t-lg'>
+    <div className="max-w-xl mx-auto mt-10 mb-10 flex flex-col items-center justify-center p-3">
+      <div className='bg-[#db8ec1] p-3 py-5 rounded-t-lg w-full shadow-lg'>
       <h1 className="text-2xl sm:text-3xl font-bold mb-2 text-white text-center">Parent &amp; Child Registration</h1>
       <h2 className="text-sm sm:text-md text-white text-center ">
             Your Journey to Clearer Speech Starts Here
@@ -140,7 +140,7 @@ const RegisterParent = () => {
       </div>
 
       {registrationSuccess ? (
-        <div className="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 rounded-md" role="alert">
+        <div className="bg-green-100 border-l-4 w-full border-green-500 text-green-700 p-4 rounded-md" role="alert">
           <p className="font-bold">Registration Successful!</p>
           <p>You have been automatically logged in. A verification link has been sent to <span className="font-semibold">{parentData.email}</span>. Please check your inbox to verify your account.</p>
           <Link to="/" className="mt-4 inline-block bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full transition duration-300">
@@ -149,9 +149,9 @@ const RegisterParent = () => {
         </div>
       ) : (
         <>
-          {message && <p className={`px-6 py-4 ${messageColorClass}`}>{message}</p>}
+          {message && <p className={`px-6 py-4 w-full ${messageColorClass}`}>{message}</p>}
 
-          <form onSubmit={handleSubmit} className="space-y-6 p-6">
+          <form onSubmit={handleSubmit} className="space-y-6 p-6 w-full border-0 border-t-0 border-gray-300 rounded-b-lg shadow-lg">
             {/* Parent Section */}
             <section>
               <h3 className="text-2xl text-gray-700 font-semibold mb-4 text-center">Parent Details</h3>
