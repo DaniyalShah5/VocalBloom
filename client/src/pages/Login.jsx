@@ -111,12 +111,17 @@ const Login = () => {
   };
 
   return (
-    <div className="max-w-md mx-auto mt-10 mb-10 p-6 bg-white border border-gray-200 rounded-lg shadow-lg">
-      <h2 className="text-2xl font-bold mb-6 text-center">Login</h2>
+    <div className="max-w-md mx-auto mt-10 mb-10 pb-2 shadow-lg bg-white sm:border sm:border-gray-100 rounded-lg sm:shadow-lg">
+      <div className='bg-[#db8ec1] p-3 py-5 sm:rounded-t-lg'>
+      <h1 className="text-2xl font-bold  text-white text-center">Sign In</h1>
+      <h2 className="text-md text-white text-center ">
+            Connecting Voices, Building Confidence
+      </h2>
+      </div>
       
       {message && (
         <div
-          className={`mb-4 p-3 rounded ${
+          className={` p-3  ${
             message.startsWith('Error') 
               ? 'bg-red-100 text-red-700' 
               : 'bg-green-100 text-green-700'
@@ -126,7 +131,7 @@ const Login = () => {
         </div>
       )}
 
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form onSubmit={handleSubmit} className="space-y-4 p-6">
         {/* Email Field */}
         <div>
           <label className="block text-gray-700 mb-1">Email:</label>
@@ -201,24 +206,24 @@ const Login = () => {
         <button
           type="submit"
           disabled={isLoading}
-          className={`w-full py-2 px-4 rounded font-medium text-white ${
+          className={`w-full mt-2 py-2 px-4 rounded font-medium text-white ${
             isLoading
               ? 'bg-[#6ec4ef] cursor-not-allowed'
-              : 'bg-[#6ec4ef] hover:bg-[#6ec4efcf] focus:outline-none focus:ring-2 transition-colors focus:ring-gray-300'
+              : 'bg-[#6ec4ef] hover:bg-[#6ec4efcf] transition-colors '
           }`}
         >
           {isLoading ? 'Logging in...' : 'Login'}
         </button>
       </form>
 
-      <div className="mt-4 text-center">
+      <div className="mb-4 text-center ">
         <p className="text-gray-600">
           Don't have an account?{' '}
-          <Link to="/register" className="text-blue-600 hover:underline">
+          <Link to="/register" className="text-[#6ec4ef] hover:underline">
             Register as Parent
           </Link>{' '}
           or{' '}
-          <Link to="/register/therapist" className="text-blue-600 hover:underline">
+          <Link to="/register/therapist" className="text-[#6ec4ef] hover:underline">
             Register as Therapist
           </Link>
         </p>

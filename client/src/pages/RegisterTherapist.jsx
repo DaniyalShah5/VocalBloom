@@ -122,14 +122,19 @@ const RegisterTherapist = () => {
     }
   };
   const messageColorClass = isError
-    ? "text-red-500"
-    : "text-green-500";
+    ? "text-red-500 bg-red-100"
+    : "text-green-500 text-green-700";
 
   return (
-    <div className="max-w-xl mx-auto mt-10 mb-10 p-6 bg-white border border-gray-200 rounded-lg shadow-lg">
-      <h2 className="text-2xl font-bold mb-6 text-center ">
+    <div className="max-w-xl mx-auto mt-10 mb-10  bg-white sm:border sm:border-gray-200 rounded-lg sm:shadow-lg">
+      <div className='bg-[#db8ec1] p-3 py-5 sm:rounded-t-lg'>
+      <h1 className="text-2xl font-bold  text-center text-white">
         Therapist Registration
+      </h1>
+      <h2 className="text-md text-white text-center ">
+            Make a difference, join as a certified speech therapist.
       </h2>
+      </div>
       {registrationSuccess ? (
         <div className="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 rounded-md" role="alert">
           <p className="font-bold">Registration Successful!</p>
@@ -140,8 +145,8 @@ const RegisterTherapist = () => {
         </div>
       ) : (
         <>
-          {message && <p className={`mb-4 ${messageColorClass}`}>{message}</p>}
-          <form onSubmit={handleSubmit} className="space-y-4">
+          {message && <p className={`px-6 py-4 ${messageColorClass}`}>{message}</p>}
+          <form onSubmit={handleSubmit} className="space-y-4 p-6">
             <label className="block text-gray-700 mb-1">Name:</label>
             <input
               type="text"
@@ -289,8 +294,8 @@ const RegisterTherapist = () => {
             <button
               type="submit"
               disabled={isLoading}
-              className={`w-full py-2 px-4 rounded font-medium text-white ${
-                isLoading ? 'bg-blue-400 cursor-not-allowed' : 'bg-[#88c6e4] hover:bg-[#5495b5] focus:outline-none focus:ring-2 focus:ring-blue-500'
+              className={`w-full py-2 px-4 rounded font-medium text-white transition-all ${
+                isLoading ? 'bg-[#6ec4ef] cursor-not-allowed' : 'bg-[#6ec4ef] hover:bg-[#6ec4efcf] '
               }`}
             >
               {isLoading ? 'Registering...' : 'Register as Therapist'}

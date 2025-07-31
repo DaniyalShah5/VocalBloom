@@ -132,7 +132,7 @@ const ProfileMenu = () => {
     <div className="relative" ref={menuRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center space-x-2 text-gray-700 hover:scale-105 duration-150 focus:outline-none p-2 rounded-full bg-gray-100"
+        className="flex items-center sm:space-x-2 text-gray-700 hover:scale-105 duration-150 focus:outline-none p-2 rounded-full bg-gray-100"
       >
         <div className="w-8 h-8 rounded-full bg-[#8ec1db] flex items-center justify-center text-white font-semibold">
           {displayName.charAt(0).toUpperCase()}

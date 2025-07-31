@@ -4,9 +4,9 @@ import { Link } from 'react-router-dom';
 export default function Home() {
   const { user } = useAuth();
   const testimonies =[
-    {name:"Andrew Berg",message:"This site has been amazing for my son! The therapy modules are really easy to follow. I love that it's free and made just for kids."},
-    {name:"Susan gurzanski",message:"We’ve seen great improvement in our daughter’s speech since using this site. It’s simple, engaging, and doesn’t cost anything. Thank you!"},
-    {name:"Linda Berlin",message:"Very helpful and easy to use. My child actually enjoys the sessions! It’s a great resource for parents looking for free speech therapy support."}
+    {id:1, name:"Andrew Berg",message:"This site has been amazing for my son! The therapy modules are really easy to follow. I love that it's free and made just for kids."},
+    {id:2, name:"Susan gurzanski",message:"We’ve seen great improvement in our daughter’s speech since using this site. It’s simple, engaging, and doesn’t cost anything. Thank you!"},
+    {id:3, name:"Linda Berlin",message:"Very helpful and easy to use. My child actually enjoys the sessions! It’s a great resource for parents looking for free speech therapy support."}
   ]
   return (
     <div className="min-h-screen">
@@ -47,12 +47,38 @@ export default function Home() {
               <div className="flex flex-col sm:flex-row gap-4 animate-fade-in-up delay-300">
                 {user ? ( 
                   <>
+                  {user.role === 'child' ? (
+
                     <Link
                       to="/interactive-session"
                       className="px-8 py-3 bg-[#8ec1db] text-white rounded-lg text-lg font-semibold hover:bg-[#5495b5] transition-all transform hover:scale-105 text-center "
                     >
                       Start a Session
                     </Link>
+                  ): user.role === 'parent' ? (
+                    <Link
+                      to="/progress"
+                      className="px-8 py-3 bg-[#8ec1db] text-white rounded-lg text-lg font-semibold hover:bg-[#5495b5] transition-all transform hover:scale-105 text-center "
+                    >
+                      View Progress
+                    </Link>
+                  ): user.role === 'therapist' ? (
+                    <Link
+                      to="/patientDashboard"
+                      className="px-8 py-3 bg-[#8ec1db] text-white rounded-lg text-lg font-semibold hover:bg-[#5495b5] transition-all transform hover:scale-105 text-center "
+                    >
+                      Therapist Dashboard
+                    </Link>
+                  ): user.role === 'admin' ? (
+                    <Link
+                      to="/admin"
+                      className="px-8 py-3 bg-[#8ec1db] text-white rounded-lg text-lg font-semibold hover:bg-[#5495b5] transition-all transform hover:scale-105 text-center "
+                    >
+                      Admin Panel
+                    </Link>
+                  ):(
+                    <></>
+                  )}
                     <Link
                       to="/therapy-modules"
                       className="px-8 py-3 text-gray-700 border-2 border-white rounded-lg text-lg font-semibold bg-white hover:bg-gray-100 hover:scale-105 transition-all text-center "
@@ -175,7 +201,7 @@ export default function Home() {
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {testimonies.map((item) => (
-              <div key={item} className="p-8 bg-white rounded-xl shadow-lg">
+              <div key={item.id} className="p-8 bg-white rounded-xl shadow-lg">
                 <div className="flex items-center mb-4">
                   <div className="w-12 h-12 rounded-full flex items-center justify-center font-semibold text-2xl text-white bg-[#8ec1db]  mr-4">{item.name?.charAt(0).toUpperCase()}</div>
                   <div>

@@ -296,13 +296,11 @@ const cancelCurrentRequest = () => {
     const secs = seconds % 60;
     return `${mins}:${secs < 10 ? "0" : ""}${secs}`;
   };
-
-
   
   // Loading state
   if (loading && (!user || request === undefined)) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50">
+      <div className="sm:min-h-screen sm:flex sm:items-center justify-center bg-gradient-to-br from-blue-50 to-purple-50">
         <div className="flex flex-col items-center justify-center min-h-64 p-8">
           <div className="relative">
             <div className="w-16 h-16 border-4 border-blue-200 rounded-full animate-spin">
@@ -362,23 +360,23 @@ const cancelCurrentRequest = () => {
     // No request or declined → show request button
     if (request === null || request?.status === "declined") {
       return (
-        <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 p-6">
+        <div className="min-h-screen py-6">
           <div className="max-w-4xl mx-auto">
-            <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
+            <div className="bg-white sm:rounded-2xl shadow-xl overflow-hidden">
               {/* Header */}
-              <div className="bg-gradient-to-r from-blue-400 to-purple-400 p-8 text-center">
-                <div className="w-20 h-20 bg-white bg-opacity-20 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Video className="text-[#5495b5]" size={32} />
+              <div className="bg-gradient-to-r from-blue-400 to-purple-400 p-4 sm:p-8 text-center ">
+                <div className="w-15 h-15 sm:w-20 sm:h-20 bg-white bg-opacity-20 rounded-full flex items-center justify-center mx-auto mb-2 sm:mb-4">
+                  <Video className="text-[#5495b5] sm:w-10 sm:h-10"  />
                 </div>
-                <h2 className="text-3xl font-bold text-white mb-2">
+                <h2 className="text-2xl sm:text-3xl font-bold text-white mb-2">
                   Start Your Therapy Session
                 </h2>
-                <p className="text-blue-100 text-lg">
+                <p className="text-blue-100 text-md sm:text-lg">
                   Connect with a professional therapist for personalized support
                 </p>
               </div>
 
-              <div className="p-8">
+              <div className="p-4 sm:p-8">
                 {request?.status === "declined" && (
                   <div className="bg-amber-50 border-l-4 border-amber-400 p-6 mb-8 rounded-r-lg">
                     <div className="flex">
@@ -399,7 +397,7 @@ const cancelCurrentRequest = () => {
                 )}
 
                 <div className="grid md:grid-cols-2 gap-8 mb-8">
-                  <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl p-6">
+                  <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl p-4 sm:p-6">
                     <h3 className="font-bold text-blue-800 mb-4 text-xl">
                       Session Benefits
                     </h3>

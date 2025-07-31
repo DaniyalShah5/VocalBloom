@@ -83,7 +83,7 @@ const TherapyModules = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-r from-purple-50 via-indigo-50 to-blue-50">
+    <div className={`min-h-screen bg-gradient-to-r from-purple-50 via-indigo-50 to-blue-50`}>
       <div className="max-w-6xl mx-auto px-4 py-8">
         <h1 className="mb-3 text-center  text-4xl font-bold text-gray-800">
           Speech Therapy Modules
@@ -131,10 +131,29 @@ const TherapyModules = () => {
           </div>
 
           {loading ? (
-            <div className="flex flex-col justify-center items-center py-10">
-              <div className="w-15 h-15 border-4 border-gray-300 border-t-blue-500 rounded-full animate-spin mx-auto"></div>
-              <p className="mt-4">Loading...</p>
+            <div className="sm:min-h-screen sm:flex sm:items-center sm:justify-center ">
+        <div className="flex flex-col items-center justify-center min-h-64 p-8">
+          <div className="relative">
+            <div className="w-16 h-16 border-4 border-blue-200 rounded-full animate-spin">
+              <div className="absolute top-0 left-0 w-16 h-16 border-4 border-transparent border-t-blue-500 rounded-full animate-spin"></div>
             </div>
+          </div>
+          <p className="text-gray-600 text-lg mt-6 font-medium">
+            Loading Module data...
+          </p>
+          <div className="flex space-x-1 mt-4">
+            <div className="w-2 h-2 bg-blue-400 rounded-full animate-bounce"></div>
+            <div
+              className="w-2 h-2 bg-purple-400 rounded-full animate-bounce"
+              style={{ animationDelay: "0.1s" }}
+            ></div>
+            <div
+              className="w-2 h-2 bg-blue-400 rounded-full animate-bounce"
+              style={{ animationDelay: "0.2s" }}
+            ></div>
+          </div>
+        </div>
+      </div>
           ) : error ? (
             <div className="bg-red-100 flex justify-center text-lg text-red-700 p-4 rounded-lg">
               {error}

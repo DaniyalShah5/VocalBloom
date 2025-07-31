@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { Library } from 'lucide-react';
 
 const TherapistDashboard = () => {
   const [patients, setPatients] = useState([]);
@@ -45,20 +46,18 @@ const TherapistDashboard = () => {
 
   useEffect(() => {
     if (showOverlay) {
-      document.body.classList.add('overflow-hidden');
+      document.body.classList.add("overflow-hidden");
     } else {
-      document.body.classList.remove('overflow-hidden');
+      document.body.classList.remove("overflow-hidden");
     }
 
-    
     return () => {
-      document.body.classList.remove('overflow-hidden');
+      document.body.classList.remove("overflow-hidden");
     };
   }, [showOverlay]);
 
   const handleViewProgress = async (childId) => {
     if (expandedPatients[childId]) {
-      
       setExpandedPatients((prev) => ({
         ...prev,
         [childId]: false,
@@ -67,7 +66,6 @@ const TherapistDashboard = () => {
       return;
     }
 
-    
     setExpandedPatients((prev) => ({
       ...prev,
       [childId]: true,
@@ -135,10 +133,10 @@ const TherapistDashboard = () => {
   };
 
   const getProgressColor = (rate) => {
-    if (rate >= 80) return "#22c55e"; 
-    if (rate >= 50) return "#f59e0b"; 
-    if (rate >= 20) return "#ef4444"; 
-    return "#6b7280"; 
+    if (rate >= 80) return "#22c55e";
+    if (rate >= 50) return "#f59e0b";
+    if (rate >= 20) return "#ef4444";
+    return "#6b7280";
   };
 
   const getActivityStatus = (lastActivity) => {
@@ -151,7 +149,6 @@ const TherapistDashboard = () => {
     return "inactive";
   };
 
-  
   const filteredPatients = patients
     .filter((patient) => {
       const matchesSearch =
@@ -192,10 +189,27 @@ const TherapistDashboard = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-r from-purple-50 via-indigo-50 to-blue-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-indigo-600 mx-auto mb-4"></div>
-          <p className="text-gray-600 text-lg">Loading patients...</p>
+      <div className="min-h-[60vh] sm:min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-purple-50">
+        <div className="flex flex-col items-center justify-center min-h-64 p-8">
+          <div className="relative">
+            <div className="w-16 h-16 border-4 border-blue-200 rounded-full animate-spin">
+              <div className="absolute top-0 left-0 w-16 h-16 border-4 border-transparent border-t-blue-500 rounded-full animate-spin"></div>
+            </div>
+          </div>
+          <p className="text-gray-600 text-lg mt-6 font-medium">
+            Loading Patients data...
+          </p>
+          <div className="flex space-x-1 mt-4">
+            <div className="w-2 h-2 bg-blue-400 rounded-full animate-bounce"></div>
+            <div
+              className="w-2 h-2 bg-purple-400 rounded-full animate-bounce"
+              style={{ animationDelay: "0.1s" }}
+            ></div>
+            <div
+              className="w-2 h-2 bg-blue-400 rounded-full animate-bounce"
+              style={{ animationDelay: "0.2s" }}
+            ></div>
+          </div>
         </div>
       </div>
     );
@@ -268,37 +282,37 @@ const TherapistDashboard = () => {
 
         {/* Controls */}
         <div className="bg-white p-6 rounded-lg shadow-lg mb-8">
-          <div className="flex flex-col lg:flex-row justify-between items-center gap-4">
-            <div className="w-full lg:w-auto">
+          <div className="flex  flex-col lg:flex-row justify-between items-center gap-4">
+            <div className="w-full lg:w-auto flex-1">
               <input
                 type="text"
                 placeholder="Search patients or parents..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full lg:w-80 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none"
+                className="w-full  px-4 py-3 border border-gray-300 rounded-lg focus:outline-none"
               />
             </div>
 
-            <div className="flex gap-4 w-full lg:w-auto">
+            <div className="flex gap-2 sm:gap-4 ">
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value)}
-                className="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                className="px-2 py-3 border border-gray-300 rounded-lg sm:min-w-[25vh]"
               >
-                <option value="name">Sort by Name</option>
-                <option value="progress">Sort by Progress</option>
-                <option value="activity">Sort by Activity</option>
+                <option value="name" className="text-xs">Sort by Name</option>
+                <option value="progress" className="text-xs">Sort by Progress</option>
+                <option value="activity" className="text-xs">Sort by Activity</option>
               </select>
 
               <select
                 value={filterBy}
                 onChange={(e) => setFilterBy(e.target.value)}
-                className="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                className="px-2 py-3 border border-gray-300 rounded-lg sm:min-w-[25vh]"
               >
-                <option value="all">All Patients</option>
-                <option value="active">Active This Week</option>
-                <option value="inactive">Inactive</option>
-                <option value="high-progress">High Progress</option>
+                <option value="all" className="text-xs ">All Patients</option>
+                <option value="active" className="text-xs">Active This Week</option>
+                <option value="inactive" className="text-xs">Inactive</option>
+                <option value="high-progress" className="text-xs">High Progress</option>
               </select>
             </div>
           </div>
@@ -412,7 +426,6 @@ const TherapistDashboard = () => {
                   {formatDate(patient.progressSummary.lastActivity)}
                 </div>
 
-                
                 <div className="flex gap-2">
                   <button
                     onClick={() => handleViewProgress(patient._id)}
@@ -426,30 +439,45 @@ const TherapistDashboard = () => {
                       ? "Hide Progress"
                       : "View Progress"}
                   </button>
-                  
                 </div>
 
-                
                 {expandedPatients[patient._id] && (
                   <div className="fixed inset-0 bg-gray-200 z-50 p-6 overflow-y-auto shadow-lg">
                     <div className="flex justify-between ">
-                    <h4 className="text-lg font-bold text-gray-800 mb-4">
-                      Detailed Progress
-                    </h4>
-                    <button
-                      onClick={() => handleViewProgress(patient._id)}
-                      className="text-red-600 font-semibold hover:opacity-50 transition-all mb-4"
-                    >
-                      Close ✕
-                    </button>
+                      <h4 className="text-lg font-bold text-gray-800 mb-4">
+                        Detailed Progress
+                      </h4>
+                      <button
+                        onClick={() => handleViewProgress(patient._id)}
+                        className="text-red-600 font-semibold hover:opacity-50 transition-all mb-4"
+                      >
+                        Close ✕
+                      </button>
                     </div>
 
                     {loadingProgress[patient._id] ? (
-                      <div className="flex items-center justify-center py-8">
-                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
-                        <span className="ml-2 text-gray-600">
-                          Loading progress...
-                        </span>
+                      <div className="min-h-[60vh] sm:min-h-screen flex items-center justify-center ">
+                        <div className="flex flex-col items-center justify-center min-h-64 p-8">
+                          <div className="relative">
+                            <div className="w-12 h-12 sm:w-16 sm:h-16 border-4 border-blue-200 rounded-full animate-spin">
+                              <div className="absolute top-0 left-0 w-12 h-12 sm:w-16 sm:h-16 border-4 border-transparent border-t-blue-500 rounded-full animate-spin"></div>
+                            </div>
+                          </div>
+                          <p className="text-gray-600 text-md sm:text-lg mt-6 font-medium">
+                            Loading Progress data...
+                          </p>
+                          <div className="flex space-x-1 mt-4">
+                            <div className="w-2 h-2 bg-blue-400 rounded-full animate-bounce"></div>
+                            <div
+                              className="w-2 h-2 bg-purple-400 rounded-full animate-bounce"
+                              style={{ animationDelay: "0.1s" }}
+                            ></div>
+                            <div
+                              className="w-2 h-2 bg-blue-400 rounded-full animate-bounce"
+                              style={{ animationDelay: "0.2s" }}
+                            ></div>
+                          </div>
+                        </div>
                       </div>
                     ) : patientProgress[patient._id] &&
                       patientProgress[patient._id].length > 0 ? (
@@ -576,7 +604,9 @@ const TherapistDashboard = () => {
                       </div>
                     ) : (
                       <div className="text-center py-8 text-gray-500">
-                        <div className="text-lg mb-2">📊</div>
+                        <div className="flex items-center justify-center mb-4 ">
+                          <Library className="h-10 w-10 sm:w-16 sm:h-16" />
+                        </div>
                         <p>No progress data available for this patient yet.</p>
                       </div>
                     )}

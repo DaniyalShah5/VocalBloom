@@ -128,11 +128,16 @@ const RegisterParent = () => {
     }
   };
 
-  const messageColorClass = isError ? "text-red-500" : "text-green-500";
+  const messageColorClass = isError ? "text-red-500 bg-red-100" : "text-green-500 bg-green-100";
 
   return (
-    <div className="max-w-xl mx-auto mt-10 mb-10 p-6 bg-white border border-gray-200 rounded-lg shadow-lg">
-      <h2 className="text-2xl font-bold mb-6 text-center">Parent &amp; Child Registration</h2>
+    <div className="max-w-xl mx-auto mt-10 mb-10  bg-white sm:border sm:border-gray-200 rounded-lg sm:shadow-lg">
+      <div className='bg-[#db8ec1] p-3 py-5 sm:rounded-t-lg'>
+      <h1 className="text-2xl sm:text-3xl font-bold mb-2 text-white text-center">Parent &amp; Child Registration</h1>
+      <h2 className="text-sm sm:text-md text-white text-center ">
+            Your Journey to Clearer Speech Starts Here
+          </h2>
+      </div>
 
       {registrationSuccess ? (
         <div className="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 rounded-md" role="alert">
@@ -144,12 +149,12 @@ const RegisterParent = () => {
         </div>
       ) : (
         <>
-          {message && <p className={`mb-4 ${messageColorClass}`}>{message}</p>}
+          {message && <p className={`px-6 py-4 ${messageColorClass}`}>{message}</p>}
 
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={handleSubmit} className="space-y-6 p-6">
             {/* Parent Section */}
             <section>
-              <h3 className="text-2xl text-gray-700 font-semibold mb-6 text-center">Parent Details</h3>
+              <h3 className="text-2xl text-gray-700 font-semibold mb-4 text-center">Parent Details</h3>
 
               <label className="block text-gray-700 mb-1">Name:</label>
               <input
@@ -323,14 +328,14 @@ const RegisterParent = () => {
             <button
               type="submit"
               disabled={isLoading}
-              className={`w-full py-2 px-4 rounded font-medium text-white ${
-                isLoading ? ' bg-[#88c6e4] cursor-not-allowed' : 'bg-[#88c6e4] hover:bg-[#5495b5] focus:outline-none focus:ring-2 focus:ring-blue-500'
+              className={`w-full py-2 px-4 rounded font-medium text-white transition-all ${
+                isLoading ? ' bg-[#6ec4ef] cursor-not-allowed' : 'bg-[#6ec4ef] hover:bg-[#6ec4efcf] '
               }`}
             >
               {isLoading ? 'Registering...' : 'Register'}
             </button>
 
-            <Link to="/register/therapist" className="block text-center text-blue-600 hover:underline">
+            <Link to="/register/therapist" className="block text-center text-gray-500 hover:text-gray-700">
               Or apply to get registered as a Therapist
             </Link>
           </form>

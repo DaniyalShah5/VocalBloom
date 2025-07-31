@@ -71,7 +71,7 @@ function App() {
           <Route
             path="/interactive-session"
             element={
-              <ProtectedRoute allowedRoles={["parent", "child", "therapist"]}>
+              <ProtectedRoute allowedRoles={[ "child", "therapist"]}>
                 <InteractiveSession />
               </ProtectedRoute>
             }
