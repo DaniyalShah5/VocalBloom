@@ -113,7 +113,7 @@ const Login = () => {
   return (
     <div className="max-w-md mx-auto min-h-[75vh] sm:min-h-screen flex flex-col items-center justify-center px-3 ">
       <div className='bg-[#db8ec1] w-full p-3 py-5 rounded-t-lg shadow-lg'>
-      <h1 className="text-2xl font-bold  text-white text-center">Sign In</h1>
+      <h1 className="text-2xl font-bold  text-white text-center">Log In</h1>
       <h2 className="text-md text-white text-center ">
             Connecting Voices, Building Confidence
       </h2>

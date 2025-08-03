@@ -1,6 +1,7 @@
 import Footer from "../component/Footer";
 import { useAuth } from '../context/AuthContext';
 import { Link } from 'react-router-dom';
+import {Gamepad, ClipboardList, House, Medal, Award, Smartphone, ShieldHalf } from 'lucide-react'
 export default function Home() {
   const { user } = useAuth();
   const testimonies =[
@@ -147,39 +148,39 @@ export default function Home() {
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {[
               {
-                icon: "🎮",
+                icon: <Gamepad className="w-8 h-8 sm:w-10 sm:h-10 text- " />,
                 title: "Interactive Modules",
                 desc: "300+ evidence-based exercises across 15 speech domains",
               },
               {
-                icon: "📊",
+                icon: <ClipboardList className="w-8 h-8 sm:w-10 sm:h-10 text- " />,
                 title: "Progress Tracking",
                 desc: "Real-time pronunciation analysis and progress reports",
               },
               {
-                icon: "👨👩👧",
+                icon: <House className="w-8 h-8 sm:w-10 sm:h-10 text- " />,
                 title: "Family Portal",
                 desc: "Collaborative space for parents and caregivers",
               },
               {
-                icon: "🏆",
+                icon: <Award className="w-8 h-8 sm:w-10 sm:h-10 text- " />,
                 title: "Reward System",
                 desc: "Motivational badges and achievement tracking",
               },
               {
-                icon: "📲",
+                icon: <Smartphone className="w-8 h-8 sm:w-10 sm:h-10 text- " />,
                 title: "Mobile Friendly",
                 desc: "Practice anywhere with mobile-optimized access",
               },
               {
-                icon: "🛡️",
+                icon: <ShieldHalf className="w-8 h-8 sm:w-10 sm:h-10 text- " />,
                 title: "Secure Platform",
                 desc: "Privacy-focused data protection",
               },
             ].map((feature, idx) => (
               <div
                 key={idx}
-                className="p-8 bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2"
+                className="p-8 bg-white rounded-xl border-1 border-gray-200 shadow-lg hover:shadow-xl/10 transition-all duration-300 transform hover:-translate-y-3 "
               >
                 <div className="text-4xl mb-4">{feature.icon}</div>
                 <h3 className="text-xl font-semibold mb-2">{feature.title}</h3>

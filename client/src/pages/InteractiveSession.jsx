@@ -32,174 +32,172 @@ export default function InteractiveSession() {
   const [therapistPendingRequests, setTherapistPendingRequests] = useState([]);
   const navigate = useNavigate();
 
-useEffect(() => {
+  useEffect(() => {
     if (socket && user) {
-        socket.emit('register', { userId: user._id, role: user.role });
+      socket.emit("register", { userId: user._id, role: user.role });
     }
-}, [socket, user]); 
+  }, [socket, user]);
 
-useEffect(() => {
+  useEffect(() => {
     if (authLoading) return;
     if (!user) {
-        setRequest(null);
-        setTherapistPendingRequests([]); 
-        setCountdown(null);
-        return;
+      setRequest(null);
+      setTherapistPendingRequests([]);
+      setCountdown(null);
+      return;
     }
 
     setLoading(true);
 
     const apiEndpoint =
-        user.role === "therapist"
-            ? `${import.meta.env.VITE_API_BASE_URL}/api/session-requests`
-            : `${import.meta.env.VITE_API_BASE_URL}/api/session-requests/my`;
+      user.role === "therapist"
+        ? `${import.meta.env.VITE_API_BASE_URL}/api/session-requests`
+        : `${import.meta.env.VITE_API_BASE_URL}/api/session-requests/my`;
 
     axios
-        .get(apiEndpoint, {
-            headers: { Authorization: `Bearer ${token}` },
-        })
-        .then((res) => {
-            setError(null);
+      .get(apiEndpoint, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      .then((res) => {
+        setError(null);
 
-            if (user.role === "therapist") {
-                const allTherapistRequests = res.data;
-                const pending = allTherapistRequests.filter(req => req.status === 'pending');
-                setTherapistPendingRequests(pending);
-                const activeSession = allTherapistRequests.find(req =>
-                    ["accepted", "in_progress"].includes(req.status)
-                );
-                setRequest(activeSession || null); 
-                setCountdown(null); 
-            } else {
-                
-                setRequest(res.data);
-                if (res.data && res.data.status === "pending") {
-                    const requestTime = new Date(res.data.requestedAt).getTime();
-                    const now = Date.now();
-                    setCountdown(Math.floor((now - requestTime) / 1000));
-                } else {
-                    setCountdown(null);
-                }
-            }
-        })
-        .catch((err) => {
-            setRequest(null);
-            setTherapistPendingRequests([]); 
+        if (user.role === "therapist") {
+          const allTherapistRequests = res.data;
+          const pending = allTherapistRequests.filter(
+            (req) => req.status === "pending"
+          );
+          setTherapistPendingRequests(pending);
+          const activeSession = allTherapistRequests.find((req) =>
+            ["accepted", "in_progress"].includes(req.status)
+          );
+          setRequest(activeSession || null);
+          setCountdown(null);
+        } else {
+          setRequest(res.data);
+          if (res.data && res.data.status === "pending") {
+            const requestTime = new Date(res.data.requestedAt).getTime();
+            const now = Date.now();
+            setCountdown(Math.floor((now - requestTime) / 1000));
+          } else {
             setCountdown(null);
-            setError("Unable to fetch session data.");
-        })
-        .finally(() => setLoading(false));
-}, [authLoading, user, token]); 
+          }
+        }
+      })
+      .catch((err) => {
+        setRequest(null);
+        setTherapistPendingRequests([]);
+        setCountdown(null);
+        setError("Unable to fetch session data.");
+      })
+      .finally(() => setLoading(false));
+  }, [authLoading, user, token]);
 
-
-useEffect(() => {
-    
+  useEffect(() => {
     if (!request || request.status !== "pending" || countdown === null) {
-        return;
+      return;
     }
     const timer = setInterval(() => {
-        setCountdown((prev) => prev + 1);
+      setCountdown((prev) => prev + 1);
     }, 1000);
-    return () => clearInterval(timer); 
-}, [request, countdown]); 
+    return () => clearInterval(timer);
+  }, [request, countdown]);
 
-
-useEffect(() => {
+  useEffect(() => {
     if (!socket || !user) return;
 
     if (user.role === "therapist") {
-        const handleNewSessionRequest = (payload) => {
-            
-            setTherapistPendingRequests(prevRequests => {
-                
-                if (prevRequests.some(req => req._id === payload.requestId)) {
-                    return prevRequests;
-                }
-                return [
-                    {
-                        _id: payload.requestId,
-                        child: payload.child,
-                        status: payload.status,
-                        requestedAt: payload.requestedAt,
-                        description: payload.description,
-                    },
-                    ...prevRequests 
-                ];
-            });
-        };
-        socket.on("new_session_request", handleNewSessionRequest);
+      const handleNewSessionRequest = (payload) => {
+        setTherapistPendingRequests((prevRequests) => {
+          if (prevRequests.some((req) => req._id === payload.requestId)) {
+            return prevRequests;
+          }
+          return [
+            {
+              _id: payload.requestId,
+              child: payload.child,
+              status: payload.status,
+              requestedAt: payload.requestedAt,
+              description: payload.description,
+            },
+            ...prevRequests,
+          ];
+        });
+      };
+      socket.on("new_session_request", handleNewSessionRequest);
 
-        const handleSessionRequestDeleted = (payload) => {
-            setTherapistPendingRequests(prevRequests =>
-                prevRequests.filter(req => req._id !== payload.requestId)
-            );
-        };
-        socket.on("session_request_deleted", handleSessionRequestDeleted);
+      const handleSessionRequestDeleted = (payload) => {
+        setTherapistPendingRequests((prevRequests) =>
+          prevRequests.filter((req) => req._id !== payload.requestId)
+        );
+      };
+      socket.on("session_request_deleted", handleSessionRequestDeleted);
 
-        return () => {
-            socket.off("new_session_request", handleNewSessionRequest);
-            socket.off("session_request_deleted", handleSessionRequestDeleted);
-        };
+      return () => {
+        socket.off("new_session_request", handleNewSessionRequest);
+        socket.off("session_request_deleted", handleSessionRequestDeleted);
+      };
     }
 
     const handleSessionRequestUpdated = (payload) => {
-
-        if (user.role === "therapist") {
-            setTherapistPendingRequests(prevRequests =>
-                prevRequests.filter(req => req._id !== payload.requestId) 
-            );
-            setRequest(prevActiveRequest => {
-                if (prevActiveRequest && prevActiveRequest._id === payload.requestId) {
-                    return {
-                        ...prevActiveRequest,
-                        status: payload.status,
-                        acceptedAt: payload.acceptedAt,
-                        declinedAt: payload.declinedAt,
-                        endedAt: payload.endedAt,
-                        therapist: payload.therapist,
-                    };
-                } else if (["accepted", "in_progress"].includes(payload.status) && payload.therapist === user._id) {
-                    return prevActiveRequest;
-                }
-                return prevActiveRequest;
-            });
-
-        } else { 
-            setRequest((prevRequest) => {
-                if (prevRequest && prevRequest._id === payload.requestId) {
-                    return {
-                        ...prevRequest,
-                        status: payload.status,
-                        acceptedAt: payload.acceptedAt,
-                        declinedAt: payload.declinedAt,
-                        endedAt: payload.endedAt,
-                        therapist: payload.therapist,
-                    };
-                }
-                return prevRequest;
-            });
-        }
+      if (user.role === "therapist") {
+        setTherapistPendingRequests((prevRequests) =>
+          prevRequests.filter((req) => req._id !== payload.requestId)
+        );
+        setRequest((prevActiveRequest) => {
+          if (
+            prevActiveRequest &&
+            prevActiveRequest._id === payload.requestId
+          ) {
+            return {
+              ...prevActiveRequest,
+              status: payload.status,
+              acceptedAt: payload.acceptedAt,
+              declinedAt: payload.declinedAt,
+              endedAt: payload.endedAt,
+              therapist: payload.therapist,
+            };
+          } else if (
+            ["accepted", "in_progress"].includes(payload.status) &&
+            payload.therapist === user._id
+          ) {
+            return prevActiveRequest;
+          }
+          return prevActiveRequest;
+        });
+      } else {
+        setRequest((prevRequest) => {
+          if (prevRequest && prevRequest._id === payload.requestId) {
+            return {
+              ...prevRequest,
+              status: payload.status,
+              acceptedAt: payload.acceptedAt,
+              declinedAt: payload.declinedAt,
+              endedAt: payload.endedAt,
+              therapist: payload.therapist,
+            };
+          }
+          return prevRequest;
+        });
+      }
     };
     socket.on("session_request_updated", handleSessionRequestUpdated);
     return () => {
-        socket.off("session_request_updated", handleSessionRequestUpdated);
+      socket.off("session_request_updated", handleSessionRequestUpdated);
     };
-}, [socket, user]);
-
+  }, [socket, user]);
 
   const createRequest = () => {
     setLoading(true);
     axios
       .post(
         `${import.meta.env.VITE_API_BASE_URL}/api/session-requests`,
-        {}, 
+        {},
         { headers: { Authorization: `Bearer ${token}` } }
       )
       .then((res) => {
         setRequest(res.data);
         setError(null);
         setCountdown(0);
-        
       })
       .catch((err) => {
         setError("Failed to create session request. Please try again.");
@@ -210,97 +208,106 @@ useEffect(() => {
   const acceptRequest = (id) => {
     setLoading(true);
     axios
-        .put(
-            `${import.meta.env.VITE_API_BASE_URL}/api/session-requests/${id}/accept`,
-            {},
-            { headers: { Authorization: `Bearer ${token}` } }
-        )
-        .then((res) => {
-            setRequest(res.data);
-            setError(null);
-            
-            setTherapistPendingRequests(prevRequests => prevRequests.filter(req => req._id !== id));
-        })
-        .catch((err) => {
-            console.error("Error:", err.response?.data?.error || err.message);
-            setError("Failed to accept request. Please try again.");
-        })
-        .finally(() => setLoading(false));
-};
+      .put(
+        `${
+          import.meta.env.VITE_API_BASE_URL
+        }/api/session-requests/${id}/accept`,
+        {},
+        { headers: { Authorization: `Bearer ${token}` } }
+      )
+      .then((res) => {
+        setRequest(res.data);
+        setError(null);
+
+        setTherapistPendingRequests((prevRequests) =>
+          prevRequests.filter((req) => req._id !== id)
+        );
+      })
+      .catch((err) => {
+        console.error("Error:", err.response?.data?.error || err.message);
+        setError("Failed to accept request. Please try again.");
+      })
+      .finally(() => setLoading(false));
+  };
 
   const declineRequest = (id) => {
     setLoading(true);
     axios
-        .put(
-            `${import.meta.env.VITE_API_BASE_URL}/api/session-requests/${id}/decline`,
-            {},
-            { headers: { Authorization: `Bearer ${token}` } }
-        )
-        .then((res) => {
-            
-            setRequest(null); 
-            setError(null);
-            
-            setTherapistPendingRequests(prevRequests => prevRequests.filter(req => req._id !== id));
-        })
-        .catch((err) => {
-            console.error("Error:", err.response?.data?.error || err.message);
-            setError("Failed to decline request. Please try again.");
-        })
-        .finally(() => setLoading(false));
-};
+      .put(
+        `${
+          import.meta.env.VITE_API_BASE_URL
+        }/api/session-requests/${id}/decline`,
+        {},
+        { headers: { Authorization: `Bearer ${token}` } }
+      )
+      .then((res) => {
+        setRequest(null);
+        setError(null);
+
+        setTherapistPendingRequests((prevRequests) =>
+          prevRequests.filter((req) => req._id !== id)
+        );
+      })
+      .catch((err) => {
+        console.error("Error:", err.response?.data?.error || err.message);
+        setError("Failed to decline request. Please try again.");
+      })
+      .finally(() => setLoading(false));
+  };
 
   const endSession = (id) => {
     setLoading(true);
     axios
-        .put(
-            `${import.meta.env.VITE_API_BASE_URL}/api/session-requests/${id}/end`,
-            {},
-            { headers: { Authorization: `Bearer ${token}` } }
-        )
-        .then((res) => {
-            setRequest(res.data);
-            setError(null);
-        })
-        .catch((err) => {
-            console.error("Error:", err.response?.data?.error || err.message);
-            setError("Failed to end session. Please try again.");
-        })
-        .finally(() => setLoading(false));
-};
+      .put(
+        `${import.meta.env.VITE_API_BASE_URL}/api/session-requests/${id}/end`,
+        {},
+        { headers: { Authorization: `Bearer ${token}` } }
+      )
+      .then((res) => {
+        setRequest(res.data);
+        setError(null);
+      })
+      .catch((err) => {
+        console.error("Error:", err.response?.data?.error || err.message);
+        setError("Failed to end session. Please try again.");
+      })
+      .finally(() => setLoading(false));
+  };
 
-const cancelCurrentRequest = () => {
-  if (!request?._id) return;
-  
-  setLoading(true);
-  axios
-    .delete(`${import.meta.env.VITE_API_BASE_URL}/api/session-requests/${request._id}`, {
-      headers: { Authorization: `Bearer ${token}` }
-    })
-    .then(() => {
-      setRequest(null);
-      setError(null);
-      
-    })
-    .catch((err) => {
-      console.error("Error:", err.response?.data?.error || err.message);
-      setError("Failed to delete session request. Please try again.");
-    })
-    .finally(() => setLoading(false));
-};
+  const cancelCurrentRequest = () => {
+    if (!request?._id) return;
 
+    setLoading(true);
+    axios
+      .delete(
+        `${import.meta.env.VITE_API_BASE_URL}/api/session-requests/${
+          request._id
+        }`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      )
+      .then(() => {
+        setRequest(null);
+        setError(null);
+      })
+      .catch((err) => {
+        console.error("Error:", err.response?.data?.error || err.message);
+        setError("Failed to delete session request. Please try again.");
+      })
+      .finally(() => setLoading(false));
+  };
 
-  
   const formatTime = (seconds) => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
     return `${mins}:${secs < 10 ? "0" : ""}${secs}`;
   };
-  
+
   // Loading state
   if (loading && (!user || request === undefined)) {
     return (
-      <div className="sm:min-h-screen sm:flex sm:items-center justify-center bg-gradient-to-br from-blue-50 to-purple-50">
+      <div className="min-h-[65vh] flex justify-center items-center sm:min-h-screen sm:flex sm:items-center justify-center bg-gradient-to-br from-blue-50 to-purple-50">
         <div className="flex flex-col items-center justify-center min-h-64 p-8">
           <div className="relative">
             <div className="w-16 h-16 border-4 border-blue-200 rounded-full animate-spin">
@@ -354,26 +361,32 @@ const cancelCurrentRequest = () => {
 
   const patientName = request?.child?.profile?.name || "Unknown Patient";
 
-  
   // CHILD / PARENT VIEW
   if (user?.role === "child" || user?.role === "parent") {
     // No request or declined → show request button
     if (request === null || request?.status === "declined") {
       return (
-        <div className="min-h-screen py-6">
+        <div className="min-h-screen p-6">
           <div className="max-w-4xl mx-auto">
-            <div className="bg-white sm:rounded-2xl shadow-xl overflow-hidden">
+            <div className="bg-white sm:rounded-2xl shadow-xl overflow-hidden rounded-xl">
               {/* Header */}
-              <div className="bg-gradient-to-r from-blue-400 to-purple-400 p-4 sm:p-8 text-center ">
-                <div className="w-15 h-15 sm:w-20 sm:h-20 bg-white bg-opacity-20 rounded-full flex items-center justify-center mx-auto mb-2 sm:mb-4">
-                  <Video className="text-[#5495b5] sm:w-10 sm:h-10"  />
+              <div className="bg-gradient-to-r from-blue-400 to-purple-400 text-center p-4">
+                <div className="grid grid-col-3 sm:grid-col-1 sm:grid-row-3">
+                  <div className="col-start-1 col-end-2 flex items-center justify-start sm:justify-center sm:row-start-1 sm:row-end-2 sm:col-start-1 sm:col-end-2">
+                    <div className="w-12 h-12 sm:w-20 sm:h-20 bg-white bg-opacity-20 rounded-full flex items-center justify-center ">
+                      <Video className="text-[#5495b5] sm:w-10 sm:h-10" />
+                    </div>
+                  </div>
+                  <div className="col-start-2 col-end-3 flex flex-col justify-center sm:row-start-2 sm:row-end-4 sm:col-start-1 sm:col-end-2 ml-2">
+                    <h2 className="font-bold text-white text-xl sm:text-3xl">
+                      Start Your Therapy Session
+                    </h2>
+                    <p className="text-blue-100 text-sm sm:text-lg">
+                      Connect with a professional therapist for personalized
+                      support
+                    </p>
+                  </div>
                 </div>
-                <h2 className="text-2xl sm:text-3xl font-bold text-white mb-2">
-                  Start Your Therapy Session
-                </h2>
-                <p className="text-blue-100 text-md sm:text-lg">
-                  Connect with a professional therapist for personalized support
-                </p>
               </div>
 
               <div className="p-4 sm:p-8">
@@ -533,10 +546,10 @@ const cancelCurrentRequest = () => {
         <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 p-6">
           <div className="max-w-3xl mx-auto">
             <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
-              <div className="bg-gradient-to-r from-[#88c6e4] to-[#db8ec1] p-6">
+              <div className="bg-gradient-to-r from-[#88c6e4] to-[#db8ec1] p-4 sm:p-6">
                 <div className="flex items-center justify-center">
-                  <div className="w-16 h-16 bg-white bg-opacity-20 rounded-full flex items-center justify-center mr-4">
-                    <Clock className="h-8 w-8 text-[#88c6e4]" />
+                  <div className="w-12 h-12 sm:w-16 sm:h-16 bg-white bg-opacity-20 rounded-full flex items-center justify-center mr-4">
+                    <Clock className="w-8 h-8 sm:h-8 sm:w-8 text-[#88c6e4]" />
                   </div>
                   <div>
                     <h2 className="text-2xl font-bold text-white">
@@ -549,35 +562,35 @@ const cancelCurrentRequest = () => {
                 </div>
               </div>
 
-              <div className="p-8">
-                <div className="text-center mb-8">
+              <div className="p-5 sm:p-8">
+                <div className="text-center mb-4 sm:mb-8">
                   <div className="relative inline-block">
-                    <div className="w-32 h-32 bg-gradient-to-r from-blue-100 to-purple-100 rounded-full flex items-center justify-center mb-6">
-                      <div className="w-24 h-24 border-4 border-blue-300 rounded-full animate-spin">
-                        <div className="absolute top-0 left-0 w-24 h-24 border-4 border-transparent border-t-[#db8ec1] rounded-full animate-spin"></div>
+                    <div className="w-20 h-20 sm:w-32 sm:h-32 bg-gradient-to-r from-blue-100 to-purple-100 rounded-full flex items-center justify-center mb-4 sm:mb-6">
+                      <div className="w-14 h-14 sm:w-24 sm:h-24 border-4 border-blue-300 rounded-full animate-spin">
+                        <div className="absolute top-0 left-0 w-14 h-14 sm:w-24 sm:h-24 border-4 border-transparent border-t-[#db8ec1] rounded-full animate-spin"></div>
                       </div>
                     </div>
-                    <div className="absolute -top-2 -right-2 w-8 h-8 bg-green-400 rounded-full flex items-center justify-center animate-pulse">
+                    <div className="absolute -top-1 -right-3 sm:-top-2 sm:-right-2 w-6 h-6 sm:w-8 sm:h-8 bg-green-400 rounded-full flex items-center justify-center animate-pulse">
                       <div className="w-3 h-3 bg-white rounded-full"></div>
                     </div>
                   </div>
 
-                  <h3 className="text-2xl font-bold text-gray-800 mb-2">
+                  <h3 className="text-xl sm:text-2xl font-bold text-gray-800 mb-2">
                     Waiting for Your Therapist
                   </h3>
-                  <p className="text-gray-600">
+                  <p className="text-gray-600 text-sm sm:text-md">
                     Please be patient while we connect you with an available
                     professional
                   </p>
                 </div>
 
-                <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl p-6 mb-8">
-                  <div className="flex justify-between items-center mb-6">
+                <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl p-6 mb-5 sm:mb-8">
+                  <div className="flex justify-between items-center mb-3 sm:mb-6">
                     <div>
                       <p className="text-gray-700 font-medium mb-1">
                         Waiting Time
                       </p>
-                      <p className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                      <p className="text-2xl sm:text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
                         {formatTime(countdown || 0)}
                       </p>
                     </div>
@@ -595,10 +608,32 @@ const cancelCurrentRequest = () => {
                   </div>
 
                   <div className="text-sm text-gray-600 mb-4">
-                    <p>
+                    <div className="hidden sm:block">
+                    <p className="">
                       Request submitted:{" "}
                       {new Date(request.requestedAt).toLocaleString()}
                     </p>
+                    </div>
+                    <div className="block sm:hidden">
+                      <p className="text-center text-gray-800 mb-2">Request submitted</p>
+                      <div className="flex items-center justify-between">
+                      <p>Date:{" "}
+                        { new Date(request.requestedAt).toLocaleDateString(undefined, {
+                          day: 'numeric',
+                          month: 'long',
+                          year: 'numeric',
+                        })}
+                      </p>
+                      <p>Time:{" "}
+                        {new Date(request.requestedAt).toLocaleTimeString(undefined,{
+                          hour:'2-digit',
+                          minute:'2-digit',
+                        })}
+                      </p>
+                      </div>
+
+                    </div>
+
                   </div>
 
                   <div className="bg-white bg-opacity-50 rounded-lg p-4">
@@ -614,10 +649,10 @@ const cancelCurrentRequest = () => {
                   </div>
                 </div>
 
-                <div className="flex justify-center space-x-4">
+                <div className="flex justify-center space-x-1 sm:space-x-4">
                   <button
                     onClick={() => window.location.reload()}
-                    className="flex items-center bg-white border-2 border-gray-200 hover:border-gray-300 text-gray-700 px-4 py-2 rounded-lg transition-colors"
+                    className="flex items-center bg-white border-2 border-gray-200 hover:border-gray-300 text-gray-700 px-4 py-2 rounded-lg transition-colors text-nowrap text-sm sm:text-[16px]"
                   >
                     <RefreshCw size={16} className="mr-2" />
                     Refresh Status
@@ -625,7 +660,7 @@ const cancelCurrentRequest = () => {
 
                   <button
                     onClick={cancelCurrentRequest}
-                    className="flex items-center bg-red-100 hover:bg-red-200 text-red-700 px-4 py-2 rounded-lg transition-colors"
+                    className="flex items-center bg-red-100 hover:bg-red-200 text-red-700 px-4 py-2 rounded-lg transition-colors text-nowrap text-sm sm:text-[16px]"
                   >
                     <X size={16} className="mr-2" />
                     Cancel Request
@@ -859,7 +894,6 @@ const cancelCurrentRequest = () => {
               </div>
               <div className="p-6">
                 <FeedbackList childId={childId} />
-                
               </div>
             </div>
           </div>
